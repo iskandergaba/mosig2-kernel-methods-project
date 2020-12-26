@@ -21,35 +21,36 @@ X_ids, Y_ids = X['Id'], Y['Id']
 X, Y = X.drop('Id', axis=1).to_numpy().astype(np.float), Y.drop('Id', axis=1).to_numpy().reshape(-1)
 
 # Split the data into training and validation sets
-X_train, X_val, Y_train, Y_val = util.train_test_split(X, Y, test_size=0.15)
+X_train, X_val, Y_train, Y_val = util.train_test_split(X, Y, test_size=0.2)
 
 # Initialize model
-model = krr.KernelRidgeRegression(kernels.rbf, 5)
-#'''
-Y_pred, Y_proba = model.fit(X, Y, 1)
-acc = np.sum(Y == Y_pred) / Y_pred.shape[0]
-print('Train accuracy:', acc)
+model = krr.KernelRidgeRegression(kernels.rbf, [7])
 
+# Fit training data
+Y_pred, Y_proba = model.fit(X_train, Y_train, 0.04)
+acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
+print('Accuracy over training data:', acc)
+
+# Test the model
+Y_pred, Y_proba = model.predict_proba(X_val)
+acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
+print('Accuracy over testing data:', acc)
+
+# Train new model on all the data
+model = krr.KernelRidgeRegression(kernels.rbf, [7])
+Y_pred, Y_proba = model.fit(X, Y, 0.04)
+acc = np.sum(Y == Y_pred) / Y_pred.shape[0]
+print('Final model accuracy over training data:', acc)
+
+# Save test results
 df = pd.DataFrame()
 for Xte in Xtes_processed:
     data = pd.read_csv(Xte, delimiter=',')
     ids, seq = data['Id'], data.drop('Id', axis=1).to_numpy()
-    Y_pred = model.predict(data)
+    Y_pred = model.predict(seq).ravel()
     temp = pd.DataFrame(data={'Id': ids, 'Bound': Y_pred})
     if df.empty:
         df = temp
     else:
         df = pd.concat([df, temp], axis=0)
 df.to_csv('data_processed/Yte.csv', index=False)
-#'''
-
-'''
-# Fit data
-Y_pred, Y_proba = model.fit(X_train, Y_train, 1)
-acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
-print('Train accuracy:', acc)
-
-Y_pred, Y_proba = model.predict_proba(X_val)
-acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
-print('Test accuracy:', acc)
-'''

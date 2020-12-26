@@ -1,27 +1,29 @@
 import numpy as np
-import kernels
-
 
 class KernelRidgeRegression():
 
-    def __init__(self, kernel, *kargs):
+    def __init__(self, kernel, kargs):
+        # Kernel function
         self.kernel = kernel
+        # Kernel function arguments
         self.kargs = kargs
 
-    # Function for model training
-    def fit(self, X, Y, l):
-        self.n = X.shape[0]
-        self.K = self.kernel(X, self.kargs)
-        self.alpha = np.dot(np.linalg.inv(self.K + l * np.identity(self.n, dtype=np.float)), Y)
-        return self.predict_proba(X)
-
-    def predict(self, X):
-        Y_pred, _ = self.predict_proba(X)
+    # Model training function
+    def fit(self, X_train, Y_train, l):
+        self.n = X_train.shape[0]
+        self.X_train = X_train
+        self.K = self.kernel(X_train, X_train, self.kargs)
+        self.alpha = np.dot(np.linalg.inv(self.K + l * np.identity(self.n, dtype=np.float)), Y_train)
+        return self.predict_proba(X_train)
+    
+    # Label prediction function
+    def predict(self, X_test):
+        Y_pred, _ = self.predict_proba(X_test)
         return Y_pred
     
-    def predict_proba(self, X):
-        Y_proba = np.empty((X.shape[0]), dtype=np.float)
-        for i in range(0, X.shape[0]):
-            Y_proba[i] = np.sum([np.dot(self.alpha[j], self.K[j, i]) for j in range(0, self.n)])
-        Y_pred = np.round(Y_proba)
-        return Y_pred.astype(int), Y_proba
+    # Label and probabilities prediction function
+    def predict_proba(self, X_test):
+        K_test = self.kernel(self.X_train, X_test, self.kargs)
+        Y_proba = np.asarray(np.dot(self.alpha, K_test)).reshape(-1)
+        Y_pred = np.round(Y_proba).astype(int)
+        return Y_pred, Y_proba

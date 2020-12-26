@@ -1,6 +1,22 @@
 import numpy as np
 
-# Constructs the RBF Kernel Gram matrix K for the data input X
-def rbf(X, sigma):
-    X_norm = np.sum(X ** 2, axis = -1)
-    return np.exp(-(1. / 2) * (X_norm[:,None] + X_norm[None,:] - 2 * np.dot(X, X.T)) / np.power(sigma, 2))
+def linear(X, Y):
+    return np.dot(X, Y.T)
+
+def polynomial(X, Y, d):
+    return (np.identity + X.T * Y)**d
+
+def rbf(X, Y, args):
+    sigma = args[0]
+
+    X_norms = np.mat([np.mat(np.dot(v, v.T))[0, 0] for v in X]).T
+    Y_norms = np.mat([np.mat(np.dot(v, v.T))[0, 0] for v in Y]).T
+
+    K1 = X_norms * np.mat(np.ones((Y.shape[0], 1), dtype=np.float64)).T
+    K2 = np.mat(np.ones((X.shape[0], 1), dtype=np.float64)) * Y_norms.T
+
+    K = K1 + K2
+    K -= 2 * np.mat(np.dot(X, Y.T))
+    K *= - 1./(2 * np.power(sigma, 2))
+
+    return np.exp(K)
