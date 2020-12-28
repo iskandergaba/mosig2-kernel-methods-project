@@ -1,13 +1,16 @@
 import numpy as np
 
 
-def linear(X, Y, _):
-    return np.dot(X, Y.T)
+def linear(X, Y, args):
+    c = args[0]
+    return np.dot(X, Y.T) + c
 
 
 def polynomial(X, Y, args):
     d = args[0]
-    return (np.identity + np.dot(X.T, Y))**d
+    c = args[1]
+    gamma = args[2]
+    return (gamma * np.dot(X, Y.T) + c)**d
 
 
 def rbf(X, Y, args):

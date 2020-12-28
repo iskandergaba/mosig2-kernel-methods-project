@@ -17,30 +17,29 @@ label_code = {'A': '0.25', 'C': '0.5', 'G': '0.75', 'T': '1'}
 alphabet = ['A', 'C', 'G', 'T']
 
 
-def krr_rbf(l, sigma, save_model=False):
+def krr_numerical(l, kernel, args, save_model=False):
     #pp.preprocess(Xtrs, Ytrs, Xtes, enc.one_hot_encode, enc_args=[alphabet])
     pp.preprocess(Xtrs, Ytrs, Xtes, enc.label_encode, enc_args=[label_code])
     # Load processed data
     X = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
     Y = pd.read_csv('data_processed/Ytr.csv', delimiter=',')
-    X_ids, Y_ids = X['Id'], Y['Id']
     X, Y = X.drop('Id', axis=1).to_numpy().astype(np.float), Y.drop(
         'Id', axis=1).to_numpy().reshape(-1)
     # Split the data into training and validation sets
     X_train, X_val, Y_train, Y_val = util.train_test_split(X, Y, test_size=0.2)
-    model = regression.KernelRidgeRegression(kernels.rbf, [sigma])
+    model = regression.KernelRidgeRegression(kernel, args)
     # Fit training data
-    Y_pred, Y_proba = model.fit(X_train, Y_train, l)
+    Y_pred, _ = model.fit(X_train, Y_train, l)
     acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
     print('Accuracy over training data:', acc)
     # Test the model
-    Y_pred, Y_proba = model.predict_proba(X_val)
+    Y_pred, _ = model.predict_proba(X_val)
     acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
     print('Accuracy over testing data:', acc)
     if save_model:
         # Train new model on all the data
-        model = regression.KernelRidgeRegression(kernels.rbf, [sigma])
-        Y_pred, Y_proba = model.fit(X, Y, l)
+        model = regression.KernelRidgeRegression(kernel, args)
+        Y_pred, _ = model.fit(X, Y, l)
         acc = np.sum(Y == Y_pred) / Y_pred.shape[0]
         print('Final model accuracy over training data:', acc)
 
@@ -58,13 +57,31 @@ def krr_rbf(l, sigma, save_model=False):
         df.to_csv('data_processed/Yte.csv', index=False)
 
 
+def krr_linear(l, c=1, save_model=False):
+    print('Linear Kernel Ridge Regression')
+    krr_numerical(l, kernels.linear, [c], save_model=save_model)
+
+
+def krr_poly(l, degree, c=1, gamma=1, save_model=False):
+    print('Polynomial Kernel Ridge Regression')
+    krr_numerical(l,
+                  kernels.polynomial, [degree, c, gamma],
+                  save_model=save_model)
+
+
+def krr_rbf(l, sigma, save_model=False):
+    print('RBF Kernel Ridge Regression')
+    krr_numerical(l, kernels.rbf, [sigma], save_model=save_model)
+
+
+# The spectrum is not a numerical one. Will clean the code further later
 def krr_spectrum(l, k, save_model=False):
+    print('Spectrum Kernel Ridge Regression')
     pp.merge(Xtrs, Ytrs)
 
     # Load processed data
     X = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
     Y = pd.read_csv('data_processed/Ytr.csv', delimiter=',')
-    X_ids, Y_ids = X['Id'], Y['Id']
     X, Y = X.drop('Id',
                   axis=1).to_numpy(), Y.drop('Id',
                                              axis=1).to_numpy().reshape(-1)
@@ -76,19 +93,19 @@ def krr_spectrum(l, k, save_model=False):
     model = regression.KernelRidgeRegression(kernels.spectrum, [k])
 
     # Fit training data
-    Y_pred, Y_proba = model.fit(X_train, Y_train, l)
+    Y_pred, _ = model.fit(X_train, Y_train, l)
     acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
     print('Accuracy over training data:', acc)
 
     # Test the model
-    Y_pred, Y_proba = model.predict_proba(X_val)
+    Y_pred, _ = model.predict_proba(X_val)
     acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
     print('Accuracy over testing data:', acc)
 
     if save_model:
         # Train new model on all the data
         model = regression.KernelRidgeRegression(kernels.spectrum, [k])
-        Y_pred, Y_proba = model.fit(X, Y, l)
+        Y_pred, _ = model.fit(X, Y, l)
         acc = np.sum(Y == Y_pred) / Y_pred.shape[0]
         print('Final model accuracy over training data:', acc)
 
@@ -106,6 +123,8 @@ def krr_spectrum(l, k, save_model=False):
         df.to_csv('data_processed/Yte.csv', index=False)
 
 
+#krr_linear(0.01, 0.5, save_model=True)
+#krr_poly(100, degree=2, c=0.1, gamma=0.5, save_model=True)
 krr_rbf(0.04, 7, save_model=True)
 #krr_rbf(0.5, 5, save_model=True)
 #krr_spectrum(0.001, 8)
