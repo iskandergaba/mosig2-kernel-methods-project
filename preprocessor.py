@@ -1,12 +1,36 @@
 import os
 import pandas as pd
 
-def label_encode(sequence, code):
-    for key, value in code.items():
-        sequence = sequence.replace(key, value)
-    return sequence
 
-def preprocess(Xtrs, Ytrs, Xtes, label_code, save_path='data_processed'):
+def merge(Xs, Ys, save_path='data_processed'):
+
+    df = pd.DataFrame()
+    for X in Xs:
+        temp0 = pd.read_csv(X, delimiter=',')
+        if df.empty:
+            df = temp0
+        else:
+            df = pd.concat([df, temp0], axis=0)
+    df.reset_index(drop=True, inplace=True)
+    df.to_csv(save_path + '/Xtr.csv', sep=',', index=False)
+
+    df = pd.DataFrame()
+    for Y in Ys:
+        temp0 = pd.read_csv(Y, delimiter=',')
+        if df.empty:
+            df = temp0
+        else:
+            df = pd.concat([df, temp0], axis=0)
+    df.reset_index(drop=True, inplace=True)
+    df.to_csv(save_path + '/Ytr.csv', sep=',', index=False)
+
+
+def preprocess(Xtrs,
+               Ytrs,
+               Xtes,
+               encoder,
+               enc_args,
+               save_path='data_processed'):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
@@ -14,14 +38,15 @@ def preprocess(Xtrs, Ytrs, Xtes, label_code, save_path='data_processed'):
     df_train = pd.DataFrame()
     for Xtr in Xtrs:
         temp0 = pd.read_csv(Xtr, delimiter=',')
-        temp1 = temp0['seq'].apply(lambda x: pd.Series(list(x))).apply(lambda x: label_encode(x, label_code))
+        temp1 = temp0['seq'].apply(lambda x: pd.Series(list(x))).apply(
+            lambda x: encoder(x, enc_args))
         temp0 = pd.concat([temp0.Id, temp1], axis=1)
         if df_train.empty:
             df_train = temp0
         else:
             df_train = pd.concat([df_train, temp0], axis=0)
     df_train.reset_index(drop=True, inplace=True)
-    df_train.to_csv(save_path + '/Xtr.csv', index=False)
+    df_train.to_csv(save_path + '/Xtr.csv', sep=',', index=False)
 
     # Merge training label files
     df_train_labels = pd.DataFrame()
@@ -32,13 +57,14 @@ def preprocess(Xtrs, Ytrs, Xtes, label_code, save_path='data_processed'):
         else:
             df_train_labels = pd.concat([df_train_labels, temp0], axis=0)
     df_train_labels.reset_index(drop=True, inplace=True)
-    df_train_labels.to_csv(save_path + '/Ytr.csv', index=False)
+    df_train_labels.to_csv(save_path + '/Ytr.csv', sep=',', index=False)
 
     # Label-encode testing data
     for Xte in Xtes:
         filename = Xte.split('/')[-1]
         df_test = pd.read_csv(Xte, delimiter=',')
-        temp0 = df_test['seq'].apply(lambda x: pd.Series(list(x))).apply(lambda x: label_encode(x, label_code))
+        temp0 = df_test['seq'].apply(lambda x: pd.Series(list(x))).apply(
+            lambda x: encoder(x, enc_args))
         df_test = pd.concat([df_test.Id, temp0], axis=1)
         df_test.reset_index(drop=True, inplace=True)
-        df_test.to_csv(save_path + '/' + filename, index=False)
+        df_test.to_csv(save_path + '/' + filename, sep=',', index=False)

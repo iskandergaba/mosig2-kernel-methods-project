@@ -1,7 +1,5 @@
-from typing import no_type_check
-
-
 import numpy as np
+
 
 def train_test_split(X, Y, test_size=0.2):
     size = int(test_size * X.shape[0])
