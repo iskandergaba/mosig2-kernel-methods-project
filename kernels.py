@@ -29,7 +29,14 @@ def rbf(X, Y, args):
     return np.exp(K)
 
 
-def spectrum(X, Y, args):    
+def rbf_svm(X, Y, args=[5.0]):
+    sigma = args[0]
+    if (X.shape[0] == Y.shape[0]):
+        return np.exp(-np.linalg.norm(X - Y)**2 / (2 * (sigma**2)))
+    else:
+        return rbf(X, Y, args)
+
+def spectrum(X, Y, args):
     def get_kernel(x, y, k):
         spec1 = np.array([x[i:i + k] for i in range(len(x) - k + 1)])
         spec2 = np.array([y[i:i + k] for i in range(len(y) - k + 1)])
@@ -39,7 +46,7 @@ def spectrum(X, Y, args):
                 np.count_nonzero(spec1 == x) * np.count_nonzero(spec2 == x)
                 for x in common
             ]))
-    
+
     k = args[0]
     n, m = X.shape[0], Y.shape[0]
     kernel = np.empty(shape=(n, m), dtype=np.int)

@@ -14,16 +14,16 @@ class KernelRidgeRegression():
         self.X_train = X_train
         K_train = self.kernel(X_train, X_train, self.kargs)
         self.alpha = np.dot(np.linalg.inv(K_train + l * np.identity(self.n, dtype=np.float)), Y_train)
-        return self.predict_proba(X_train)
+        return self.predict_vals(X_train)
     
     # Label prediction function
     def predict(self, X_test):
-        Y_pred, _ = self.predict_proba(X_test)
+        Y_pred, _ = self.predict_vals(X_test)
         return Y_pred
     
     # Label and probabilities prediction function
-    def predict_proba(self, X_test):
+    def predict_vals(self, X_test):
         K_test = self.kernel(self.X_train, X_test, self.kargs)
         Y_proba = np.asarray(np.dot(self.alpha, K_test)).reshape(-1)
-        Y_pred = np.round(Y_proba).astype(int)
+        Y_pred = np.sign(Y_proba).astype(int)
         return Y_pred, Y_proba

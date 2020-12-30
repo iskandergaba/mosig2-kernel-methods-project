@@ -31,13 +31,11 @@ def ksvm(lamb, kernel, args, save_model=False):
     X_train, X_val, Y_train, Y_val = util.train_test_split(X, Y, test_size=0.2)
     model = svm.KSVM(kernel, args)
     # Fit training data
-    Y_pred, y_proba = model.fit(X_train, Y_train, lamb)
+    Y_pred, _ = model.fit(X_train, Y_train, lamb, verbose=True)
     acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
     print('Accuracy over training data:', acc)
-    print(y_proba)
-    print(np.where(y_proba < 0)[0].shape[0] + np.where(y_proba > 0)[0].shape[0])
     # Test the model
-    Y_pred, _ = model.predict_proba(X_val)
+    Y_pred, _ = model.predict_vals(X_val)
     acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
     print('Accuracy over testing data:', acc)
     if save_model:
@@ -69,6 +67,7 @@ def krr_numerical(l, kernel, args, save_model=False):
     Y = pd.read_csv('data_processed/Ytr.csv', delimiter=',')
     X, Y = X.drop('Id', axis=1).to_numpy().astype(np.float), Y.drop(
         'Id', axis=1).to_numpy().reshape(-1)
+    Y[Y == 0] = -1
     # Split the data into training and validation sets
     X_train, X_val, Y_train, Y_val = util.train_test_split(X, Y, test_size=0.2)
     model = regression.KernelRidgeRegression(kernel, args)
@@ -77,7 +76,7 @@ def krr_numerical(l, kernel, args, save_model=False):
     acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
     print('Accuracy over training data:', acc)
     # Test the model
-    Y_pred, _ = model.predict_proba(X_val)
+    Y_pred, _ = model.predict_vals(X_val)
     acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
     print('Accuracy over testing data:', acc)
     if save_model:
@@ -93,6 +92,7 @@ def krr_numerical(l, kernel, args, save_model=False):
             data = pd.read_csv(Xte, delimiter=',')
             ids, seq = data['Id'], data.drop('Id', axis=1).to_numpy()
             Y_pred = model.predict(seq).ravel()
+            Y_pred[Y_pred == -1] = 0
             temp = pd.DataFrame(data={'Id': ids, 'Bound': Y_pred})
             if df.empty:
                 df = temp
@@ -167,11 +167,12 @@ def krr_spectrum(l, k, save_model=False):
         df.to_csv('data_processed/Yte.csv', index=False)
 
 
-print('RBF Kernel SVM')
-ksvm(10, kernels.rbf, [7], save_model=True)
-#ksvm(0.1, kernels.rbf, [7], save_model=True)
+# Using our older RBF simply isn't working
+#print('RBF Kernel SVM')
+#ksvm(100, kernels.rbf_svm, [5], save_model=True)
+
 #krr_linear(0.01, 0.5, save_model=True)
 #krr_poly(100, degree=2, c=0.1, gamma=0.5, save_model=True)
-#krr_rbf(0.04, 7, save_model=True)
+krr_rbf(0.05, 7, save_model=True)
 #krr_rbf(0.5, 5, save_model=True)
 #krr_spectrum(0.001, 8)

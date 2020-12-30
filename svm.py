@@ -1,6 +1,13 @@
 import numpy as np
-import cvxpy as cp
+import cvxopt as cvx
 
+'''
+Much better, but still not working...
+Web pages for help:
+https://pythonprogramming.net/soft-margin-kernel-cvxopt-svm-machine-learning-tutorial/
+https://medium.com/python-in-plain-english/introducing-python-package-cvxopt-implementing-svm-from-scratch-dc40dda1da1f
+https://xavierbourretsicotte.github.io/SVM_implementation.html
+'''
 
 class KSVM(object):
     def __init__(self, kernel, kargs):
@@ -10,39 +17,53 @@ class KSVM(object):
         self.kargs = kargs
 
     # Model training function
-    def fit(self, X_train, Y_train, lamb):
+    def fit(self, X_train, Y_train, lamb=None, verbose=False):
         self.n = X_train.shape[0]
         self.X_train = X_train
+        Y_train = Y_train.astype(np.float)
+
         K_train = self.kernel(X_train, X_train, self.kargs)
-        Y_train = Y_train.reshape(-1, 1).astype(np.float).T
+        #Y_K_train = Y_train * K_train
+        #H = np.dot(Y_K_train.T, Y_K_train)
+        H = np.outer(Y_train, Y_train) * K_train
+
         # Define minimization problem
-        alpha = cp.Variable((self.n, 1))
-        loss = cp.sum(cp.pos(1 - Y_train @ K_train @ alpha))
-        reg = cp.norm(alpha.T @ K_train)
-        #reg = cp.norm(cp.multiply(alpha, K_train))
+        P = cvx.matrix(H)
+        q = cvx.matrix(-np.ones(self.n))
+        A = cvx.matrix(Y_train, (1, self.n))
+        b = cvx.matrix(0.0)
+
+        if lamb == None:
+            G = cvx.matrix(np.diag(-np.ones(self.n)))
+            h = cvx.matrix(np.zeros(self.n))
+        else:
+            G = cvx.matrix(
+                np.vstack((np.diag(-np.ones(self.n)), np.identity(self.n))))
+            h = cvx.matrix(
+                np.hstack((np.zeros(self.n), lamb * np.ones(self.n))))
+
+        # Set solver parameters
+        cvx.solvers.options['show_progress'] = verbose
         '''
-        # Unsure about the regularization part.
-        # Primal problem definition should be like
-        psi = cp.Variable((1, self.n))
-        loss = cp.sum(psi)
-        reg = alpha.T @ K_train @ alpha
-        constraints = [psi >= 0, Y_train @ K_train @ alpha.T + psi - 1 >= 0]
-        prob = cp.Problem(cp.Minimize(loss / self.n + lamb * reg), constraints)
+        cvx.solvers.options['abstol'] = 1e-10
+        cvx.solvers.options['reltol'] = 1e-10
+        cvx.solvers.options['feastol'] = 1e-10
         '''
-        prob = cp.Problem(cp.Minimize(loss / self.n + lamb * reg))
-        prob.solve(verbose=True)
-        self.alpha = np.array(alpha.value)
+
+        # Run solver
+        solution = cvx.solvers.qp(P, q, G, h, A, b)
+        self.alpha = np.array(solution['x'])
         self.alpha = self.alpha.T
-        return self.predict_proba(X_train)
+        return self.predict_vals(X_train)
 
     # Label prediction function
     def predict(self, X_test):
-        Y_pred, _ = self.predict_proba(X_test)
+        Y_pred, _ = self.predict_vals(X_test)
         return Y_pred
 
     # Label and probabilities prediction function
-    def predict_proba(self, X_test):
+    def predict_vals(self, X_test):
         K_test = self.kernel(self.X_train, X_test, self.kargs)
-        Y_proba = np.asarray(np.dot(self.alpha, K_test)).reshape(-1)
-        Y_pred = np.sign(Y_proba).astype(int)
-        return Y_pred, Y_proba
+        Y_vals = np.asarray(np.dot(self.alpha, K_test)).reshape(-1)
+        Y_pred = np.sign(Y_vals).astype(int)
+        return Y_pred, Y_vals
