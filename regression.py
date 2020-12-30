@@ -12,8 +12,8 @@ class KernelRidgeRegression():
     def fit(self, X_train, Y_train, l):
         self.n = X_train.shape[0]
         self.X_train = X_train
-        self.K = self.kernel(X_train, X_train, self.kargs)
-        self.alpha = np.dot(np.linalg.inv(self.K + l * np.identity(self.n, dtype=np.float)), Y_train)
+        K_train = self.kernel(X_train, X_train, self.kargs)
+        self.alpha = np.dot(np.linalg.inv(K_train + l * np.identity(self.n, dtype=np.float)), Y_train)
         return self.predict_proba(X_train)
     
     # Label prediction function
