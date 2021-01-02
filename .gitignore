@@ -6,3 +6,5 @@ _pycache__/
 *.py[cod]
 *$py.class
 .Python
+
+data_processed/*
