@@ -62,7 +62,11 @@ def ksvm(lamb, kernel, args, save_model=False):
                 df = pd.concat([df, temp], axis=0)
         df.to_csv('data_processed/Yte.csv', index=False)
 
-def krr_numerical(X, Y, l, kernel, args, save_model=False, test_dir=[]):
+def krr_numerical(X, Y, l, kernel, args, save_model=False, Xte=None):
+
+    if save_model and Xte is None:
+        print("Please provide a test dataframe to save predictions.")
+
     # Split the data into training and validation sets
     X_train, X_val, Y_train, Y_val = util.train_test_split(X, Y, test_size=0.2)
     model = regression.KernelRidgeRegression(kernel, args)
@@ -81,8 +85,12 @@ def krr_numerical(X, Y, l, kernel, args, save_model=False, test_dir=[]):
         acc = np.sum(Y == Y_pred) / Y_pred.shape[0]
         print('Final model accuracy over training data:', acc)
 
-        # Save test results
-        df = pd.DataFrame()
+        Y_pred = model.predict(Xte).ravel()
+        Y_pred[Y_pred == -1] = 0
+        df = pd.DataFrame(data={'Bound': Y_pred})
+        
+        '''# Save test results
+        df = pd.DataFrame() 
         for Xte in test_dir:
             data = pd.read_csv(Xte, delimiter=',')
             ids, seq = data['Id'], data.drop('Id', axis=1).to_numpy()
@@ -92,8 +100,8 @@ def krr_numerical(X, Y, l, kernel, args, save_model=False, test_dir=[]):
             if df.empty:
                 df = temp
             else:
-                df = pd.concat([df, temp], axis=0)
-        df.to_csv('data_processed/Yte.csv', index=False)
+                df = pd.concat([df, temp], axis=0)'''
+        df.to_csv('data_processed/Yte.csv', index=True, index_label='Id')
 
 
 def krr_linear(X, Y, l, c=1, save_model=False):
@@ -108,9 +116,9 @@ def krr_poly(X, Y, l, degree, c=1, gamma=1, save_model=False):
                   save_model=save_model, test_dir=test_dir)
 
 
-def krr_rbf(X, Y, l, sigma, save_model=False, test_dir=[]):
+def krr_rbf(X, Y, l, sigma, save_model=False, Xte=None):
     print('RBF Kernel Ridge Regression')
-    krr_numerical(X, Y, l, kernels.rbf, [sigma], save_model=save_model, test_dir=test_dir)
+    krr_numerical(X, Y, l, kernels.rbf, [sigma], save_model=save_model, Xte=Xte)
 
 
 # The spectrum is not a numerical one. Will clean the code further later
@@ -150,7 +158,9 @@ def krr_spectrum(l, k, save_model=False):
         print('Final model accuracy over training data:', acc)
 
         # Save test results
-        df = pd.DataFrame()
+        Y_pred = model.predict(Xte).ravel()
+        df = pd.DataFrame(data={'Bound': Y_pred})
+        '''
         for Xte in Xtes_processed:
             data = pd.read_csv(Xte, delimiter=',')
             ids, seq = data['Id'], data.drop('Id', axis=1).to_numpy()
@@ -160,7 +170,8 @@ def krr_spectrum(l, k, save_model=False):
                 df = temp
             else:
                 df = pd.concat([df, temp], axis=0)
-        df.to_csv('data_processed/Yte.csv', index=False)
+        '''
+        df.to_csv('data_processed/Yte.csv', index=True, index_label='Id')
 
 
 # PREPROCESS THE DATA // TODO: POSSIBLY MOVE THIS INTO A FUNCTION
@@ -176,27 +187,29 @@ if (not read_mat):
 
 # Read mat file
 else:
-    pp.merge(Xtrs_mat100, 'data_processed/Xtr.csv', delimiter=' ')
-    pp.merge(Xtes_mat100, 'data_processed/Xte.csv', delimiter=' ')
-    pp.merge(Ytrs, 'data_processed/Ytr.csv')
-'''
+    pp.merge(Xtrs_mat100, 'data_processed/Xtr.csv', delimiter=' ', save_index=True)
+    pp.merge(Xtes_mat100, 'data_processed/Xte.csv', delimiter=' ', save_index=True)
+    pp.merge(Ytrs, 'data_processed/Ytr.csv', read_header=0)
+
 # Load processed data
 X = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
 Y = pd.read_csv('data_processed/Ytr.csv', delimiter=',')
+Xte = pd.read_csv('data_processed/Xte.csv', delimiter=',')
 
-if (not read_mat):
-    X = X.drop('Id', axis=1).to_numpy().astype(np.float)
-else:
-    X = X.to_numpy().astype(np.float)
+X = X.drop('Id', axis=1).to_numpy().astype(np.float)
+Xte = Xte.drop('Id', axis=1).to_numpy().astype(np.float)
 Y = Y.drop('Id', axis=1).to_numpy().reshape(-1)
 Y[Y == 0] = -1
 
+print(X)
+print(Y)
+print(Xte)
 # Using our older RBF simply isn't working
 #print('RBF Kernel SVM')
 #ksvm(100, kernels.rbf_svm, [5], save_model=True)
 
 #krr_linear(X, Y, 0.01, 0.5, save_model=True, test_dir=Xtes_processed)
 #krr_poly(X, Y, 100, degree=2, c=0.1, gamma=0.5, save_model=True, test_dir=Xtes_processed)
-krr_rbf(X, Y, 0.05, 7, save_model=True, test_dir=Xtes_processed)
+krr_rbf(X, Y, 0.05, 7, save_model=True, Xte=Xte)
 #krr_rbf(X, Y, 0.5, 5, save_model=True, test_dir=Xtes_processed)
-#krr_spectrum(0.001, 8)'''
+#krr_spectrum(0.001, 8)

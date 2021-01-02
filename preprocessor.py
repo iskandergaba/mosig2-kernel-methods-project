@@ -2,17 +2,20 @@ import os
 import pandas as pd
 
 
-def merge(Xs, save_filename, delimiter=','):
+def merge(Xs, save_filename, delimiter=',', read_header=None, save_index=False):
 
     df = pd.DataFrame()
     for X in Xs:
-        temp0 = pd.read_csv(X, delimiter=delimiter, header=None)
+        temp0 = pd.read_csv(X, delimiter=delimiter, header=read_header)
         if df.empty:
             df = temp0
         else:
             df = pd.concat([df, temp0], axis=0)
     df.reset_index(drop=True, inplace=True)
-    df.to_csv(save_filename, sep=',', index=True, index_label='Id')
+    if save_index:
+        df.to_csv(save_filename, sep=',', index=True, index_label='Id')
+    else:
+        df.to_csv(save_filename, sep=',', index=False)
 
 
 def preprocess(Xtrs,
