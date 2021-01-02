@@ -104,16 +104,16 @@ def krr_numerical(X, Y, l, kernel, args, save_model=False, Xte=None):
         df.to_csv('data_processed/Yte.csv', index=True, index_label='Id')
 
 
-def krr_linear(X, Y, l, c=1, save_model=False):
+def krr_linear(X, Y, l, c=1, save_model=False, Xte=None):
     print('Linear Kernel Ridge Regression')
-    krr_numerical(X, Y, l, kernels.linear, [c], save_model=save_model, test_dir=test_dir)
+    krr_numerical(X, Y, l, kernels.linear, [c], save_model=save_model, Xte=Xte)
 
 
-def krr_poly(X, Y, l, degree, c=1, gamma=1, save_model=False):
+def krr_poly(X, Y, l, degree, c=1, gamma=1, save_model=False, Xte=None):
     print('Polynomial Kernel Ridge Regression')
     krr_numerical(X, Y, l,
                   kernels.polynomial, [degree, c, gamma],
-                  save_model=save_model, test_dir=test_dir)
+                  save_model=save_model, Xte=Xte)
 
 
 def krr_rbf(X, Y, l, sigma, save_model=False, Xte=None):
