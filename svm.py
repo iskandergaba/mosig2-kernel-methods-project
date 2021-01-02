@@ -52,7 +52,7 @@ class KSVM(object):
 
         # Run solver
         solution = cvx.solvers.qp(P, q, G, h, A, b)
-        self.alpha = np.array(solution['x'])
+        self.alpha = np.ravel(solution['x'])
         self.alpha = self.alpha.T
         return self.predict_vals(X_train)
 
