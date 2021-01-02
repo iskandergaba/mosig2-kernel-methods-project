@@ -8,12 +8,15 @@ import encoder as enc
 import preprocessor as pp
 
 Xtrs = ['data/Xtr0.csv', 'data/Xtr1.csv', 'data/Xtr2.csv']
-Ytrs = ['data/Ytr0.csv', 'data/Ytr1.csv', 'data/Ytr2.csv']
+Xtrs_mat100 = ['data/Xtr0_mat100.csv', 'data/Xtr1_mat100.csv', 'data/Xtr2_mat100.csv']
 Xtes = ['data/Xte0.csv', 'data/Xte1.csv', 'data/Xte2.csv']
+Xtes_mat100 = ['data/Xte0_mat100.csv', 'data/Xte1_mat100.csv', 'data/Xte2_mat100.csv']
 Xtes_processed = [
     'data_processed/Xte0.csv', 'data_processed/Xte1.csv',
     'data_processed/Xte2.csv'
 ]
+Ytrs = ['data/Ytr0.csv', 'data/Ytr1.csv', 'data/Ytr2.csv']
+
 label_code = {'A': '0.25', 'C': '0.5', 'G': '0.75', 'T': '1'}
 alphabet = ['A', 'C', 'G', 'T']
 
@@ -59,15 +62,7 @@ def ksvm(lamb, kernel, args, save_model=False):
                 df = pd.concat([df, temp], axis=0)
         df.to_csv('data_processed/Yte.csv', index=False)
 
-def krr_numerical(l, kernel, args, save_model=False):
-    #pp.preprocess(Xtrs, Ytrs, Xtes, enc.one_hot_encode, enc_args=[alphabet])
-    pp.preprocess(Xtrs, Ytrs, Xtes, enc.label_encode, enc_args=[label_code])
-    # Load processed data
-    X = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
-    Y = pd.read_csv('data_processed/Ytr.csv', delimiter=',')
-    X, Y = X.drop('Id', axis=1).to_numpy().astype(np.float), Y.drop(
-        'Id', axis=1).to_numpy().reshape(-1)
-    Y[Y == 0] = -1
+def krr_numerical(X, Y, l, kernel, args, save_model=False, test_dir=[]):
     # Split the data into training and validation sets
     X_train, X_val, Y_train, Y_val = util.train_test_split(X, Y, test_size=0.2)
     model = regression.KernelRidgeRegression(kernel, args)
@@ -88,7 +83,7 @@ def krr_numerical(l, kernel, args, save_model=False):
 
         # Save test results
         df = pd.DataFrame()
-        for Xte in Xtes_processed:
+        for Xte in test_dir:
             data = pd.read_csv(Xte, delimiter=',')
             ids, seq = data['Id'], data.drop('Id', axis=1).to_numpy()
             Y_pred = model.predict(seq).ravel()
@@ -101,27 +96,28 @@ def krr_numerical(l, kernel, args, save_model=False):
         df.to_csv('data_processed/Yte.csv', index=False)
 
 
-def krr_linear(l, c=1, save_model=False):
+def krr_linear(X, Y, l, c=1, save_model=False):
     print('Linear Kernel Ridge Regression')
-    krr_numerical(l, kernels.linear, [c], save_model=save_model)
+    krr_numerical(X, Y, l, kernels.linear, [c], save_model=save_model, test_dir=test_dir)
 
 
-def krr_poly(l, degree, c=1, gamma=1, save_model=False):
+def krr_poly(X, Y, l, degree, c=1, gamma=1, save_model=False):
     print('Polynomial Kernel Ridge Regression')
-    krr_numerical(l,
+    krr_numerical(X, Y, l,
                   kernels.polynomial, [degree, c, gamma],
-                  save_model=save_model)
+                  save_model=save_model, test_dir=test_dir)
 
 
-def krr_rbf(l, sigma, save_model=False):
+def krr_rbf(X, Y, l, sigma, save_model=False, test_dir=[]):
     print('RBF Kernel Ridge Regression')
-    krr_numerical(l, kernels.rbf, [sigma], save_model=save_model)
+    krr_numerical(X, Y, l, kernels.rbf, [sigma], save_model=save_model, test_dir=test_dir)
 
 
 # The spectrum is not a numerical one. Will clean the code further later
 def krr_spectrum(l, k, save_model=False):
     print('Spectrum Kernel Ridge Regression')
-    pp.merge(Xtrs, Ytrs)
+    pp.merge(Xtrs, 'data_processed/Xtr.csv')
+    pp.merge(Ytrs, 'data_processed/Ytr.csv')
 
     # Load processed data
     X = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
@@ -167,12 +163,40 @@ def krr_spectrum(l, k, save_model=False):
         df.to_csv('data_processed/Yte.csv', index=False)
 
 
+# PREPROCESS THE DATA // TODO: POSSIBLY MOVE THIS INTO A FUNCTION
+
+read_mat = True
+
+if (not read_mat):
+    # Either label encode
+    #pp.preprocess(Xtrs, Ytrs, Xtes, enc.one_hot_encode, enc_args=[alphabet])
+    pp.preprocess(Xtrs, Ytrs, Xtes, enc.label_encode, enc_args=[label_code])
+
+# OR
+
+# Read mat file
+else:
+    pp.merge(Xtrs_mat100, 'data_processed/Xtr.csv', delimiter=' ')
+    pp.merge(Xtes_mat100, 'data_processed/Xte.csv', delimiter=' ')
+    pp.merge(Ytrs, 'data_processed/Ytr.csv')
+'''
+# Load processed data
+X = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
+Y = pd.read_csv('data_processed/Ytr.csv', delimiter=',')
+
+if (not read_mat):
+    X = X.drop('Id', axis=1).to_numpy().astype(np.float)
+else:
+    X = X.to_numpy().astype(np.float)
+Y = Y.drop('Id', axis=1).to_numpy().reshape(-1)
+Y[Y == 0] = -1
+
 # Using our older RBF simply isn't working
 #print('RBF Kernel SVM')
 #ksvm(100, kernels.rbf_svm, [5], save_model=True)
 
-#krr_linear(0.01, 0.5, save_model=True)
-#krr_poly(100, degree=2, c=0.1, gamma=0.5, save_model=True)
-krr_rbf(0.05, 7, save_model=True)
-#krr_rbf(0.5, 5, save_model=True)
-#krr_spectrum(0.001, 8)
+#krr_linear(X, Y, 0.01, 0.5, save_model=True, test_dir=Xtes_processed)
+#krr_poly(X, Y, 100, degree=2, c=0.1, gamma=0.5, save_model=True, test_dir=Xtes_processed)
+krr_rbf(X, Y, 0.05, 7, save_model=True, test_dir=Xtes_processed)
+#krr_rbf(X, Y, 0.5, 5, save_model=True, test_dir=Xtes_processed)
+#krr_spectrum(0.001, 8)'''

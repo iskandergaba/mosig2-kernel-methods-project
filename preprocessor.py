@@ -2,27 +2,17 @@ import os
 import pandas as pd
 
 
-def merge(Xs, Ys, save_path='data_processed'):
+def merge(Xs, save_filename, delimiter=','):
 
     df = pd.DataFrame()
     for X in Xs:
-        temp0 = pd.read_csv(X, delimiter=',')
+        temp0 = pd.read_csv(X, delimiter=delimiter, header=None)
         if df.empty:
             df = temp0
         else:
             df = pd.concat([df, temp0], axis=0)
     df.reset_index(drop=True, inplace=True)
-    df.to_csv(save_path + '/Xtr.csv', sep=',', index=False)
-
-    df = pd.DataFrame()
-    for Y in Ys:
-        temp0 = pd.read_csv(Y, delimiter=',')
-        if df.empty:
-            df = temp0
-        else:
-            df = pd.concat([df, temp0], axis=0)
-    df.reset_index(drop=True, inplace=True)
-    df.to_csv(save_path + '/Ytr.csv', sep=',', index=False)
+    df.to_csv(save_filename, sep=',', index=True, index_label='Id')
 
 
 def preprocess(Xtrs,
