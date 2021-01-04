@@ -1,7 +1,11 @@
 import os
 import pandas as pd
 
-
+# merge takes a list of files names Xs, with their proper delimiter
+# it merges them and saves them with a comma delimiter into save_filename
+# read_header is for whether or not there is a header in the read files
+# save_index is for whether we need to save the Id's in the merged files or
+# they're already part of the data
 def merge(Xs, save_filename, delimiter=',', read_header=None, save_index=False):
 
     df = pd.DataFrame()

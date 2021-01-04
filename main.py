@@ -73,6 +73,11 @@ def ksvm(X, Y, lamb, kernel, args, save_model=False, Xte=None):
         '''
         df.to_csv('data_processed/Yte.csv', index=True, index_label='Id')
 
+# krr_numerical now takes numpy arrays as inputs
+# X is the training data
+# Y is the training data labels
+# if save_model = True, the testing data (as a numpy array) should be provided
+# in Xte
 def krr_numerical(X, Y, l, kernel, args, save_model=False, Xte=None):
 
     if save_model and Xte is None:
@@ -188,6 +193,7 @@ def krr_spectrum(l, k, save_model=False):
 
 # PREPROCESS THE DATA // TODO: POSSIBLY MOVE THIS INTO A FUNCTION
 
+# read mat refers to reading the mat100 files
 read_mat = True
 
 if (not read_mat):
@@ -199,6 +205,9 @@ if (not read_mat):
 
 # Read mat file
 else:
+    # merge mat files in Xtr.csv, Xte.csv and Ytr.csv
+    # add Id column (save_index) where necessary (the mat100 files don't have
+    # it by default
     pp.merge(Xtrs_mat100, 'data_processed/Xtr.csv', delimiter=' ', save_index=True)
     pp.merge(Xtes_mat100, 'data_processed/Xte.csv', delimiter=' ', save_index=True)
     pp.merge(Ytrs, 'data_processed/Ytr.csv', read_header=0)
@@ -218,20 +227,22 @@ Y[Y == 0] = -1
 #print(Xte)
 # Using our older RBF simply isn't working
 #print('RBF Kernel SVM')
-ksvm(X, Y, 100, kernels.rbf_svm, [5], save_model=True, Xte=Xte)
+#ksvm(X, Y, 100, kernels.rbf_svm, [5], save_model=True, Xte=Xte)
 
 #krr_linear(X, Y, 0.01, 0.5, save_model=True, Xte=Xte)
 #krr_poly(X, Y, 100, degree=2, c=0.1, gamma=0.5, save_model=True, Xte=Xte)
 #krr_rbf(X, Y, 0.05, 7, save_model=True, Xte=Xte)
 
-#lambdas = [1]
-#sigmas = [0.05]
-#
-#for lam in lambdas:
-#    for sigm in sigmas:
-#        print("lambda", lam, "\tsigma", sigm)
-#        krr_rbf(X, Y, lam, sigm, save_model=True, Xte=Xte)
-#        print("\n\n")
+lambdas = [1]
+sigmas = [0.05]
+
+for lam in lambdas:
+    for sigm in sigmas:
+        print("lambda", lam, "\tsigma", sigm)
+        # refer to comment above krr_numerical to understand the signature of
+        # this function
+        krr_rbf(X, Y, lam, sigm, save_model=True, Xte=Xte)
+        print("\n\n")
 
 #krr_rbf(X, Y, 0.5, 5, save_model=True, Xte=Xte)
 #krr_spectrum(0.001, 8)
