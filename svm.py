@@ -22,7 +22,14 @@ class KSVM(object):
         self.X_train = X_train
         Y_train = Y_train.astype(np.float)
 
-        K_train = self.kernel(X_train, X_train, self.kargs)
+        K_train = np.zeros((self.n, self.n))
+        for i in range(self.n):
+            #print(i, end=' ')
+            for j in range(self.n):
+                K_train[i,j] = self.kernel(X_train[i], X_train[j], self.kargs)
+        #K_train = self.kernel(X_train, X_train, self.kargs)
+
+        print(K_train)
         #Y_K_train = Y_train * K_train
         #H = np.dot(Y_K_train.T, Y_K_train)
         H = np.outer(Y_train, Y_train) * K_train
@@ -52,14 +59,33 @@ class KSVM(object):
 
         # Run solver
         solution = cvx.solvers.qp(P, q, G, h, A, b)
-        self.alpha = np.ravel(solution['x'])
-        self.alpha = self.alpha.T
-        return self.predict_vals(X_train)
+        alpha = np.ravel(solution['x'])
+        #self.alpha = self.alpha.T
+        sv = alpha > 1e-5
+
+        ind = np.arange(len(alpha))[sv]
+        self.a = alpha[sv]
+        self.sv = X_train[sv]
+        self.sv_y = Y_train[sv]
+
+        self.b = 0
+        for u in range(len(self.a)):
+            self.b += self.sv_y[u]
+            self.b -= np.sum(self.a * self.sv_y * K_train[ind[u],sv])
+        self.b /= len(self.a)
+
+        return self.predict(X_train)
 
     # Label prediction function
     def predict(self, X_test):
-        Y_pred, _ = self.predict_vals(X_test)
-        return Y_pred
+        Y_pred = np.zeros(len(X_test))
+        for i in range(len(X_test)):
+            s = 0
+            for a, sv_y, sv in zip(self.a, self.sv_y, self.sv):
+                s += a * sv_y * self.kernel(X_test[i], sv)
+            Y_pred[i] = s
+        #Y_pred, _ = self.predict_vals(X_test)
+        return np.sign(Y_pred + self.b)
 
     # Label and probabilities prediction function
     def predict_vals(self, X_test):

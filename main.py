@@ -36,11 +36,11 @@ def ksvm(X, Y, lamb, kernel, args, save_model=False, Xte=None):
     X_train, X_val, Y_train, Y_val = util.train_test_split(X, Y, test_size=0.2)
     model = svm.KSVM(kernel, args)
     # Fit training data
-    Y_pred, _ = model.fit(X_train, Y_train, lamb, verbose=True)
+    Y_pred = model.fit(X_train, Y_train, lamb, verbose=True)
     acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
     print('Accuracy over training data:', acc)
     # Test the model
-    Y_pred, _ = model.predict_vals(X_val)
+    Y_pred = model.predict(X_val)
     acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
     print('Accuracy over testing data:', acc)
     if save_model:
@@ -49,7 +49,7 @@ def ksvm(X, Y, lamb, kernel, args, save_model=False, Xte=None):
 
         # Train new model on all the data
         model = svm.KSVM(kernel, args)
-        Y_pred, _ = model.fit(X, Y, lamb)
+        Y_pred = model.fit(X, Y, lamb)
         acc = np.sum(Y == Y_pred) / Y_pred.shape[0]
         print('Final model accuracy over training data:', acc)
 
@@ -224,13 +224,13 @@ ksvm(X, Y, 100, kernels.rbf_svm, [5], save_model=True, Xte=Xte)
 #krr_poly(X, Y, 100, degree=2, c=0.1, gamma=0.5, save_model=True, Xte=Xte)
 #krr_rbf(X, Y, 0.05, 7, save_model=True, Xte=Xte)
 
-#lambdas = [1, 0.05]
-#sigmas = [0.5, 0.05]
+#lambdas = [1]
+#sigmas = [0.05]
 #
 #for lam in lambdas:
 #    for sigm in sigmas:
 #        print("lambda", lam, "\tsigma", sigm)
-#        krr_rbf(X, Y, lam, sigm)
+#        krr_rbf(X, Y, lam, sigm, save_model=True, Xte=Xte)
 #        print("\n\n")
 
 #krr_rbf(X, Y, 0.5, 5, save_model=True, Xte=Xte)
