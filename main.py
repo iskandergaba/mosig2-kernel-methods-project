@@ -1,4 +1,3 @@
-from numpy.lib.npyio import save
 import svm
 import util
 import kernels
