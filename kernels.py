@@ -36,8 +36,19 @@ def rbf_svm(X, Y, args=[5.0]):
     else:
         return rbf(X, Y, args)
 
+
 def spectrum(X, Y, args):
     def get_kernel(x, y, k):
+        checked = []
+        sum = 0
+        for i in range(len(x) - k + 1):
+            kmer = x[i:i + k]
+            if kmer not in checked:
+                sum += x.count(kmer, i) * y.count(kmer)
+                checked.append(kmer)
+        return np.float(sum)
+
+    def get_kernel_old(x, y, k):
         spec1 = np.array([x[i:i + k] for i in range(len(x) - k + 1)])
         spec2 = np.array([y[i:i + k] for i in range(len(y) - k + 1)])
         common = np.intersect1d(spec1, spec2)
@@ -49,11 +60,12 @@ def spectrum(X, Y, args):
 
     k = args[0]
     n, m = X.shape[0], Y.shape[0]
-    kernel = np.empty(shape=(n, m), dtype=np.int)
+    kernel = np.empty(shape=(n, m), dtype=np.float)
     for i in range(n):
         for j in range(m):
             if i <= j or i >= m:
-                kernel[i, j] = get_kernel(X[i], Y[j], k)
+                kernel[i, j] = get_kernel(X[i, 0], Y[j, 0], k)
             else:
                 kernel[i, j] = kernel[j, i]
+        kernel[i] = kernel[i] / np.max(np.max(kernel[i]), 0)
     return kernel

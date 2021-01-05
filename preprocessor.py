@@ -1,12 +1,17 @@
 import os
 import pandas as pd
 
+
 # merge takes a list of files names Xs, with their proper delimiter
 # it merges them and saves them with a comma delimiter into save_filename
 # read_header is for whether or not there is a header in the read files
 # save_index is for whether we need to save the Id's in the merged files or
 # they're already part of the data
-def merge(Xs, save_filename, delimiter=',', read_header=None, save_index=False):
+def merge(Xs,
+          save_filename,
+          delimiter=',',
+          read_header=None,
+          save_index=False):
 
     df = pd.DataFrame()
     for X in Xs:
@@ -56,12 +61,16 @@ def preprocess(Xtrs,
     df_train_labels.reset_index(drop=True, inplace=True)
     df_train_labels.to_csv(save_path + '/Ytr.csv', sep=',', index=False)
 
-    # Label-encode testing data
+    # Label-encode training data and merge test files
+    df_test = pd.DataFrame()
     for Xte in Xtes:
-        filename = Xte.split('/')[-1]
-        df_test = pd.read_csv(Xte, delimiter=',')
-        temp0 = df_test['seq'].apply(lambda x: pd.Series(list(x))).apply(
+        temp0 = pd.read_csv(Xte, delimiter=',')
+        temp1 = temp0['seq'].apply(lambda x: pd.Series(list(x))).apply(
             lambda x: encoder(x, enc_args))
-        df_test = pd.concat([df_test.Id, temp0], axis=1)
-        df_test.reset_index(drop=True, inplace=True)
-        df_test.to_csv(save_path + '/' + filename, sep=',', index=False)
+        temp0 = pd.concat([temp0.Id, temp1], axis=1)
+        if df_test.empty:
+            df_test = temp0
+        else:
+            df_test = pd.concat([df_test, temp0], axis=0)
+    df_test.reset_index(drop=True, inplace=True)
+    df_test.to_csv(save_path + '/Xte.csv', sep=',', index=False)
