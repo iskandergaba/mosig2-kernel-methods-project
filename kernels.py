@@ -1,4 +1,6 @@
+import os
 import numpy as np
+from multiprocessing import Pool
 
 
 def linear(X, Y, args):
@@ -37,35 +39,33 @@ def rbf_svm(X, Y, args=[5.0]):
         return rbf(X, Y, args)
 
 
-def spectrum(X, Y, args):
-    def get_kernel(x, y, k):
-        checked = []
-        sum = 0
-        for i in range(len(x) - k + 1):
-            kmer = x[i:i + k]
-            if kmer not in checked:
-                sum += x.count(kmer, i) * y.count(kmer)
-                checked.append(kmer)
-        return np.float(sum)
-
-    def get_kernel_old(x, y, k):
-        spec1 = np.array([x[i:i + k] for i in range(len(x) - k + 1)])
-        spec2 = np.array([y[i:i + k] for i in range(len(y) - k + 1)])
-        common = np.intersect1d(spec1, spec2)
-        return np.sum(
-            np.array([
-                np.count_nonzero(spec1 == x) * np.count_nonzero(spec2 == x)
-                for x in common
-            ]))
-
-    k = args[0]
+def _string_kernel(X, Y, kernel, kargs):
     n, m = X.shape[0], Y.shape[0]
-    kernel = np.empty(shape=(n, m), dtype=np.float)
+    K = np.empty(shape=(n, m), dtype=np.float)
     for i in range(n):
-        for j in range(m):
-            if i <= j or i >= m:
-                kernel[i, j] = get_kernel(X[i, 0], Y[j, 0], k)
-            else:
-                kernel[i, j] = kernel[j, i]
-        kernel[i] = kernel[i] / np.max(np.max(kernel[i]), 0)
-    return kernel
+        # Use the fact that K is symmetric
+        done = [K[j, i] for j in range(i)] if i < m else []
+        # Parallelize the inner loop
+        pool = Pool(os.cpu_count())
+        inputs = [[X[i, 0], Y[j, 0]] + kargs
+                  for j in range(i, m)] if i < m else [[X[i, 0], Y[j, 0]] +
+                                                       kargs for j in range(m)]
+        K[i] = np.array(done + pool.map(kernel, inputs))
+        # Scale-down the entries to the range [0, 1]
+        K[i] = K[i] / np.max(np.max(K[i]), 0)
+    return K
+
+
+# Efficient k-spectrum implementation: https://dx.doi.org/10.1016/j.procs.2017.08.207
+def _spectrum(args):
+    x, y, k = args[0], args[1], args[2]
+    phi, kmers = 0, {}
+    for i in range(len(x) - k + 1):
+        kmers[x[i:i + k]] = kmers[x[i:i + k]] + 1 if x[i:i + k] in kmers else 1
+    for i in range(len(y) - k + 1):
+        phi += kmers[y[i:i + k]] if y[i:i + k] in kmers else 0
+    return phi
+
+
+def spectrum(X, Y, args):
+    return _string_kernel(X, Y, _spectrum, args)

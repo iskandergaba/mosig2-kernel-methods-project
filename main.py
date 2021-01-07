@@ -234,22 +234,23 @@ def krr_spectrum(lamb, k, save_model=False):
 
 # In case we want to conduct a grid search
 '''
-lambdas = [0.001, 0.01, 1, 10, 100]
+lambdas = [0.001, 0.01, 1, 10]
 sigmas = [0.005, 0.05, 0.5, 1, 5, 10]
-ks = [3, 4, 5, 6, 7, 8]
+#ks = [3, 4, 5, 6, 7, 8]
+ks = [8, 9, 10, 11, 12, 13, 14, 15]
 
-for lam in lambdas:
+for lamb in lambdas:
+    #for sigma in sigmas:
     for k in ks:
-        print("lambda", lam, "\tk", k)
-        # refer to comment above krr_numerical to understand the signature of
-        # this function
-        #krr_rbf(X, Y, lam, sigm, save_model=True, Xte=Xte)
-        krr_spectrum(lam, k)
-        print("\n\n")
+        #print("lambda", lamb, "\tk", k)
+        print("Lambda = {0}, k = {1}".format(lamb, k))
+        #krr_rbf(lamb, sigma, save_model=False, read_mat=True)
+        krr_spectrum(lamb, k, save_model=False)
+        print("\n")
 '''
 
 # Sample model calls
 krr_rbf(0.01, 0.5, save_model=True, read_mat=True)
 #krr_linear(0.01, 0.5, save_model=True, read_mat=True)
 #krr_poly(100, degree=2, c=0.1, gamma=0.5, save_model=True, read_mat=False)
-#krr_spectrum(0.05, 8, save_model=True)
+#krr_spectrum(0.05, 8, save_model=False)
