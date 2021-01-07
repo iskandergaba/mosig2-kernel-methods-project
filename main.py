@@ -138,20 +138,12 @@ def _krr_alphabetic(lamb, kernel, args, save_model=False):
     #Xtr, Ytr = Xtr[:1000], Ytr[:1000]
 
     # Split the data into training and validation sets
-    X_train, X_val, Y_train, Y_val = util.train_test_split(Xtr, Ytr, test_size=0.2)
-    
+    X_train, X_val, Y_train, Y_val = util.train_test_split(Xtr,
+                                                           Ytr,
+                                                           test_size=0.2)
+
     # Initialize model
     model = regression.KernelRidgeRegression(kernel, args)
-    
-    # Fit training data
-    Y_pred, _ = model.fit(X_train, Y_train, lamb)
-    acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
-    print('Accuracy over training data:', acc)
-
-    # Test the model
-    Y_pred, _ = model.predict_vals(X_val)
-    acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
-    print('Accuracy over testing data:', acc)
 
     if save_model:
         # Train new model on all the data
@@ -168,13 +160,27 @@ def _krr_alphabetic(lamb, kernel, args, save_model=False):
         df = pd.DataFrame(data={'Bound': Y_pred})
         df.to_csv('data_processed/Yte.csv', index=True, index_label='Id')
 
+    else:
+        # Fit training data
+        Y_pred, _ = model.fit(X_train, Y_train, lamb)
+        acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
+        print('Accuracy over training data:', acc)
+
+        # Test the model
+        Y_pred, _ = model.predict_vals(X_val)
+        acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
+        print('Accuracy over testing data:', acc)
+        print(Y_pred)
+
 
 def _krr_numerical(lamb, kernel, args, save_model=False, read_mat=False):
 
     Xtr, Ytr, Xte = preproess(numerical=True, read_mat=read_mat)
 
     # Split the data into training and validation sets
-    X_train, X_val, Y_train, Y_val = util.train_test_split(Xtr, Ytr, test_size=0.2)
+    X_train, X_val, Y_train, Y_val = util.train_test_split(Xtr,
+                                                           Ytr,
+                                                           test_size=0.2)
     # Initialize the model
     model = regression.KernelRidgeRegression(kernel, args)
     # Fit training data
@@ -234,23 +240,25 @@ def krr_spectrum(lamb, k, save_model=False):
 
 # In case we want to conduct a grid search
 '''
-lambdas = [0.001, 0.01, 1, 10]
+#lambdas = [0.001, 0.01, 0.1, 1, 10]
+lambdas = [10, 5, 1, 0.1]
 sigmas = [0.005, 0.05, 0.5, 1, 5, 10]
-#ks = [3, 4, 5, 6, 7, 8]
-ks = [8, 9, 10, 11, 12, 13, 14, 15]
+#ks = [8, 9, 10, 11, 12, 13, 14, 15]
+ks = [5, 6, 7, 8, 9, 10]
 
 for lamb in lambdas:
     #for sigma in sigmas:
     for k in ks:
-        #print("lambda", lamb, "\tk", k)
+        #print("Lambda = {0}, sigma = {1}".format(lamb, sigma))
         print("Lambda = {0}, k = {1}".format(lamb, k))
         #krr_rbf(lamb, sigma, save_model=False, read_mat=True)
         krr_spectrum(lamb, k, save_model=False)
         print("\n")
 '''
-
 # Sample model calls
-krr_rbf(0.01, 0.5, save_model=True, read_mat=True)
+#krr_rbf(0.01, 0.5, save_model=True, read_mat=True)
 #krr_linear(0.01, 0.5, save_model=True, read_mat=True)
 #krr_poly(100, degree=2, c=0.1, gamma=0.5, save_model=True, read_mat=False)
 #krr_spectrum(0.05, 8, save_model=False)
+krr_spectrum(0.1, 9, save_model=False)
+krr_spectrum(10000, 9, save_model=False)

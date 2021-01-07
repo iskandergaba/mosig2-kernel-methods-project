@@ -42,17 +42,19 @@ def rbf_svm(X, Y, args=[5.0]):
 def _string_kernel(X, Y, kernel, kargs):
     n, m = X.shape[0], Y.shape[0]
     K = np.empty(shape=(n, m), dtype=np.float)
+    pool = Pool(os.cpu_count())
     for i in range(n):
         # Use the fact that K is symmetric
         done = [K[j, i] for j in range(i)] if i < m else []
         # Parallelize the inner loop
-        pool = Pool(os.cpu_count())
         inputs = [[X[i, 0], Y[j, 0]] + kargs
                   for j in range(i, m)] if i < m else [[X[i, 0], Y[j, 0]] +
                                                        kargs for j in range(m)]
         K[i] = np.array(done + pool.map(kernel, inputs))
         # Scale-down the entries to the range [0, 1]
-        K[i] = K[i] / np.max(np.max(K[i]), 0)
+        K[i] = K[i] / max(np.max(K[i]), 1)
+    # Or re-scale using the whole matrix
+    #K /= np.max(K)
     return K
 
 
