@@ -52,7 +52,7 @@ def _string_kernel(X, Y, kernel, kargs):
                                                        kargs for j in range(m)]
         K[i] = np.array(done + pool.map(kernel, inputs))
         # Scale-down the entries to the range [0, 1]
-        K[i] = K[i] / max(np.max(K[i]), 1)
+        #K[i] = K[i] / max(np.max(K[i]), 1)
     # Or re-scale using the whole matrix
     #K /= np.max(K)
     return K
@@ -61,6 +61,7 @@ def _string_kernel(X, Y, kernel, kargs):
 # Efficient k-spectrum implementation: https://dx.doi.org/10.1016/j.procs.2017.08.207
 def _spectrum(args):
     x, y, k = args[0], args[1], args[2]
+    # In Python, dictionaries act like hashtables
     phi, kmers = 0, {}
     for i in range(len(x) - k + 1):
         kmers[x[i:i + k]] = kmers[x[i:i + k]] + 1 if x[i:i + k] in kmers else 1
@@ -68,6 +69,24 @@ def _spectrum(args):
         phi += kmers[y[i:i + k]] if y[i:i + k] in kmers else 0
     return phi
 
+# Very inefficient mismatch kernel implementation
+def _mismatch(args):
+    x, y, k, m = args[0], args[1], args[2], args[3]
+    phi, kmers = 0, {}
+    for i in range(len(x) - k + 1):
+        kmers[x[i:i + k]] = kmers[x[i:i + k]] + 1 if x[i:i + k] in kmers else 1
+    for i in range(len(y) - k + 1):
+        #phi_part = 0
+        for key in kmers:
+            diff = sum(c1 != c2 for c1, c2 in zip(key, y[i:i + k]))
+            #phi_part += kmers[key] if kmers[key] > phi_part and diff <= m else phi_part
+            phi += kmers[key] if diff <= m else 0
+        #phi += phi_part
+    return phi
+
 
 def spectrum(X, Y, args):
     return _string_kernel(X, Y, _spectrum, args)
+
+def mismatch(X, Y, args):
+    return _string_kernel(X, Y, _mismatch, args)
