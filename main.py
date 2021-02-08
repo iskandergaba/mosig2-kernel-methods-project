@@ -261,6 +261,7 @@ trials, best_params = 1, [[],[],[]]
 
 
 for index in range(3):
+    print("Dataset", index)
     best_acc = 0
     Xtr, Ytr, Xte = preproess(index, numerical=False)
     # Split the data into training and validation sets
@@ -291,7 +292,7 @@ for index in range(3):
     print("Best parameters:\nLambda = {0}\nSigma = {1}".format(best_params[index][0], best_params[index][1]))
     #print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
     #krr_rbf(best_params[0], best_params[1], save_model=True, read_mat=True)
-    krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, index, save_model=True)
+    krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, best_params[index][0], best_params[index][1], index, save_model=True)
 
 
 # Sample model calls
