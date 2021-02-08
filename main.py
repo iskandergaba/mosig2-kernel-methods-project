@@ -166,7 +166,7 @@ def _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernel,
         Y_pred = model.predict(Xte).ravel()
         Y_pred[Y_pred == -1] = 0
         df = pd.DataFrame(data={'Bound': Y_pred})
-        df.to_csv('data_processed/Yte'+index+'.csv', index=True, index_label='Id')
+        df.to_csv('data_processed/Yte'+str(index)+'.csv', index=True, index_label='Id')
 
     else:
         # Fit training data
@@ -259,8 +259,7 @@ ks = [5, 6, 7, 8, 9]
 trials, best_params = 1, [[],[],[]]
 
 
-
-for index in range(3):
+for index in range(0,3):
     print("Dataset", index)
     best_acc = 0
     Xtr, Ytr, Xte = preproess(index, numerical=False)
@@ -268,7 +267,7 @@ for index in range(3):
     X_train, X_val, Y_train, Y_val = util.train_test_split(Xtr,
                                                            Ytr,
                                                            test_size=0.2,
-                                                           random=True)
+                                                           random=False)
 
     
     for lamb in lambdas:
@@ -286,14 +285,16 @@ for index in range(3):
             # Update the best accuracy and parameters
             if best_acc < acc:
                 best_acc = acc
-                #best_params[i] = [lamb, sigma]
-                best_params[i] = [lamb, k]
+                #best_params[index] = [lamb, sigma]
+                best_params[index] = [lamb, k]
 
     print("Best parameters:\nLambda = {0}\nSigma = {1}".format(best_params[index][0], best_params[index][1]))
     #print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
     #krr_rbf(best_params[0], best_params[1], save_model=True, read_mat=True)
     krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, best_params[index][0], best_params[index][1], index, save_model=True)
 
+Ytes = ['data_processed/Yte0.csv', 'data_processed/Yte1.csv', 'data_processed/Yte2.csv']
+pp.merge(Ytes, 'data_processed/Yte.csv', read_header=0, save_index=True)
 
 # Sample model calls
 #krr_rbf(1, 0.05, save_model=True, read_mat=True)
