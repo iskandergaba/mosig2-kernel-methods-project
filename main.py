@@ -25,11 +25,13 @@ label_code = {'A': '0.25', 'C': '0.5', 'G': '0.75', 'T': '1'}
 alphabet = ['A', 'C', 'G', 'T']
 
 
-def preproess(numerical=True, read_mat=False):
+def preproess(index, numerical=True, read_mat=False):
 
     Xtr, Xte = pd.DataFrame(), pd.DataFrame()
     if numerical:
         if read_mat:
+            # OLD CODE FOR MERGING
+            '''
             # merge mat files in Xtr.csv, Xte.csv and Ytr.csv
             # add Id column (save_index) where necessary (the mat100 files don't have
             # it by default
@@ -42,22 +44,32 @@ def preproess(numerical=True, read_mat=False):
                      delimiter=' ',
                      save_index=True)
             pp.merge(Ytrs, 'data_processed/Ytr.csv', read_header=0)
+            '''
+
+            # READ MAT100 FILE AT INDEX index ONLY
+            Xtr = pd.read_csv(Xtrs_mat100[index], delimiter=' ', header=None)
+            Xte = pd.read_csv(Xtes_mat100[index], delimiter=' ', header=None)
 
         else:
+            # THIS IS NOT IDEAL
+            # Use the same pp.preprocess calls but pass one file only
+
             # Either label encode or one-hot encode
             #pp.preprocess(Xtrs, Ytrs, Xtes, enc.one_hot_encode, enc_args=[alphabet])
-            pp.preprocess(Xtrs,
-                          Ytrs,
-                          Xtes,
+            pp.preprocess([Xtrs[index]],
+                          [Ytrs[index]],
+                          [Xtes[index]],
                           enc.label_encode,
                           enc_args=[label_code])
-        # Load processed data
-        Xtr = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
-        Xtr = Xtr.drop('Id', axis=1).to_numpy().astype(np.float)
+            # Load processed data
+            Xtr = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
+            Xtr = Xtr.drop('Id', axis=1).to_numpy().astype(np.float)
 
-        Xte = pd.read_csv('data_processed/Xte.csv', delimiter=',')
-        Xte = Xte.drop('Id', axis=1).to_numpy().astype(np.float)
+            Xte = pd.read_csv('data_processed/Xte.csv', delimiter=',')
+            Xte = Xte.drop('Id', axis=1).to_numpy().astype(np.float)
     else:
+        # OLD CODE FOR MERGING
+        '''
         pp.merge(Xtrs, 'data_processed/Xtr.csv', read_header=0)
         pp.merge(Xtes, 'data_processed/Xte.csv', read_header=0)
         pp.merge(Ytrs, 'data_processed/Ytr.csv', read_header=0)
@@ -68,11 +80,19 @@ def preproess(numerical=True, read_mat=False):
 
         Xte = pd.read_csv('data_processed/Xte.csv', delimiter=',')
         Xte = Xte.drop('Id', axis=1).to_numpy()
+        '''
+
+        # READ FILE AT INDEX index ONLY
+        Xtr = pd.read_csv(Xtrs[index], delimiter=',', header=0)
+        Xtr = Xtr.drop('Id', axis=1).to_numpy()
+
+        Xte = pd.read_csv(Xtes[index], delimiter=',', header=0)
+        Xte = Xte.drop('Id', axis=1).to_numpy()
 
     # Common part
-    Ytr = pd.read_csv('data_processed/Ytr.csv', delimiter=',')
+    Ytr = pd.read_csv(Ytrs[index], delimiter=',', header=0)
     Ytr = Ytr.drop('Id', axis=1).to_numpy().reshape(-1)
-    #Ytr[Ytr == 0] = -1
+    Ytr[Ytr == 0] = -1
 
     return Xtr, Ytr, Xte,
 
