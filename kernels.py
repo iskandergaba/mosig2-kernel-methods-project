@@ -14,7 +14,10 @@ def polynomial(X, Y, args, sym=False):
     gamma = args[2]
     return (gamma * np.dot(X, Y.T) + c)**d
 
-
+# TODO: Y=None by default. This is used to auto-detect symmetry
+# instead of passing explicit flags, which is prone to human error.
+# When only X is passed, we compute K from X and X. We do this
+# in every kernel.
 def rbf(X, Y, args, sym=False):
     sigma = args[0]
 
@@ -38,7 +41,10 @@ def rbf_svm(X, Y, args=[5.0]):
     else:
         return rbf(X, Y, args)
 
-
+# TODO: Y=None by default. This is used to auto-detect symmetry
+# instead of passing explicit flags, which is prone to human error.
+# When only X is passed, we compute K from X and X. We do this
+# in every kernel.
 def _string_kernel(X, Y, kernel, kargs, sym=False):
     n, m = X.shape[0], Y.shape[0]
     K = np.empty(shape=(n, m), dtype=np.float)
@@ -89,7 +95,9 @@ def _mismatch(args):
         #phi += phi_part
     return phi
 
-
+# TODO: sym can be detected automatically by checking if Y = None.
+# In case of training, we only pass X. In case of testing, we pass
+# X and Y. Change that for a cleaner code and better abstraction.
 def spectrum(X, Y, args, sym=False):
     return _string_kernel(X, Y, _spectrum, args, sym)
 
