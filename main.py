@@ -239,12 +239,12 @@ def krr_rbf(lamb, sigma, save_model=False, read_mat=False):
 
 def krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, index, save_model=False):
     print('Spectrum Kernel Ridge Regression')
-    _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.spectrum, [k], index, save_model=save_model)
+    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.spectrum, [k], index, save_model=save_model)
 
 
 def krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, m, index, save_model=False):
     print('Mismatch Kernel Ridge Regression')
-    _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.mismatch, [k, m], index, save_model=save_model)
+    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.mismatch, [k, m], index, save_model=save_model)
 
 
 # Using our older RBF simply isn't working
