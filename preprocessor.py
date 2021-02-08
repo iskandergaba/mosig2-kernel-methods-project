@@ -22,6 +22,8 @@ def merge(Xs,
             df = pd.concat([df, temp0], axis=0)
     df.reset_index(drop=True, inplace=True)
     if save_index:
+        if 'Id' in df.columns:
+            df = df.drop('Id', axis=1)
         df.to_csv(save_filename, sep=',', index=True, index_label='Id')
     else:
         df.to_csv(save_filename, sep=',', index=False)
