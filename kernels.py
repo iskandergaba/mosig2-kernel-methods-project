@@ -3,23 +3,23 @@ import numpy as np
 from multiprocessing import Pool
 
 
-def linear(X, Y, args):
+def linear(X, Y, args, sym=False):
     c = args[0]
     return np.dot(X, Y.T) + c
 
 
-def polynomial(X, Y, args):
+def polynomial(X, Y, args, sym=False):
     d = args[0]
     c = args[1]
     gamma = args[2]
     return (gamma * np.dot(X, Y.T) + c)**d
 
 
-def rbf(X, Y, args):
+def rbf(X, Y, args, sym=False):
     sigma = args[0]
 
     X_norms = np.mat([np.mat(np.dot(v, v.T))[0, 0] for v in X]).T
-    Y_norms = np.mat([np.mat(np.dot(v, v.T))[0, 0] for v in Y]).T
+    Y_norms = X_norms if sym else np.mat([np.mat(np.dot(v, v.T))[0, 0] for v in Y]).T
 
     K1 = X_norms * np.mat(np.ones((Y.shape[0], 1), dtype=np.float64)).T
     K2 = np.mat(np.ones((X.shape[0], 1), dtype=np.float64)) * Y_norms.T
@@ -39,20 +39,25 @@ def rbf_svm(X, Y, args=[5.0]):
         return rbf(X, Y, args)
 
 
-def _string_kernel(X, Y, kernel, kargs):
+def _string_kernel(X, Y, kernel, kargs, sym=False):
     n, m = X.shape[0], Y.shape[0]
     K = np.empty(shape=(n, m), dtype=np.float)
     pool = Pool(os.cpu_count())
     for i in range(n):
-        # Use the fact that K is symmetric
-        done = [K[j, i] for j in range(i)] if i < m else []
-        # Parallelize the inner loop
-        inputs = [[X[i, 0], Y[j, 0]] + kargs
-                  for j in range(i, m)] if i < m else [[X[i, 0], Y[j, 0]] +
-                                                       kargs for j in range(m)]
-        K[i] = np.array(done + pool.map(kernel, inputs))
-        # Scale-down the entries to the range [0, 1]
-        #K[i] = K[i] / max(np.max(K[i]), 1)
+        if sym: # This is the case when X=Y
+            # Use the fact that K is symmetric
+            done = [K[j, i] for j in range(i)] if i < m else []
+            # Parallelize the inner loop
+            inputs = [[X[i, 0], Y[j, 0]] + kargs
+                      for j in range(i, m)] if i < m else [[X[i, 0], Y[j, 0]] +
+                                                           kargs for j in range(m)]
+            K[i] = np.array(done + pool.map(kernel, inputs))
+            # Scale-down the entries to the range [0, 1]
+            #K[i] = K[i] / max(np.max(K[i]), 1)
+        else:
+            inputs = [[X[i, 0], Y[j, 0]] + kargs for j in range(m)]
+            K[i] = np.array(pool.map(kernel, inputs))
+
     # Or re-scale using the whole matrix
     #K /= np.max(K)
     return K
@@ -85,8 +90,8 @@ def _mismatch(args):
     return phi
 
 
-def spectrum(X, Y, args):
-    return _string_kernel(X, Y, _spectrum, args)
+def spectrum(X, Y, args, sym=False):
+    return _string_kernel(X, Y, _spectrum, args, sym)
 
-def mismatch(X, Y, args):
-    return _string_kernel(X, Y, _mismatch, args)
+def mismatch(X, Y, args, sym=False):
+    return _string_kernel(X, Y, _mismatch, args, sym)

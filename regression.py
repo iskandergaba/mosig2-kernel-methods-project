@@ -12,7 +12,7 @@ class KernelRidgeRegression():
     def fit(self, X_train, Y_train, lamb):
         self.n = X_train.shape[0]
         self.X_train = X_train
-        self.K_train = self.kernel(X_train, X_train, self.kargs)
+        self.K_train = self.kernel(X_train, X_train, self.kargs, sym=True)
         #print(self.K_train)
         self.alpha = np.dot(
             np.linalg.inv(self.K_train +
