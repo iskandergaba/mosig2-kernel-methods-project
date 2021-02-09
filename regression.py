@@ -12,12 +12,7 @@ class KernelRidgeRegression():
     def fit(self, X_train, Y_train, lamb):
         self.n = X_train.shape[0]
         self.X_train = X_train
-        # TODO: The function call should become
-        # self.kernel(X_train, kargs=self.kargs)
-        # Symmetry is auto-detected (assumed) when
-        # passing X_train only. It means we want
-        # to compute kernel between X_train and X_train
-        self.K_train = self.kernel(X_train, X_train, self.kargs, sym=True)
+        self.K_train = self.kernel(X_train, None, self.kargs)
         self.alpha = np.dot(
             np.linalg.inv(self.K_train +
                           lamb * self.n * np.identity(self.n, dtype=np.float)), Y_train)

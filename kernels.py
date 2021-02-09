@@ -3,22 +3,23 @@ import numpy as np
 from multiprocessing import Pool
 
 
-def linear(X, Y, args, sym=False):
+def linear(X, Y, args):
     c = args[0]
     return np.dot(X, Y.T) + c
 
 
-def polynomial(X, Y, args, sym=False):
+def polynomial(X, Y, args):
     d = args[0]
     c = args[1]
     gamma = args[2]
     return (gamma * np.dot(X, Y.T) + c)**d
 
-# TODO: Y=None by default. This is used to auto-detect symmetry
-# instead of passing explicit flags, which is prone to human error.
-# When only X is passed, we compute K from X and X. We do this
-# in every kernel.
-def rbf(X, Y, args, sym=False):
+def rbf(X, Y, args):
+    # Check if X=Y
+    sym = isinstance(Y, type(None))
+    if sym:
+        Y = X
+
     sigma = args[0]
 
     X_norms = np.mat([np.mat(np.dot(v, v.T))[0, 0] for v in X]).T
@@ -41,16 +42,16 @@ def rbf_svm(X, Y, args=[5.0]):
     else:
         return rbf(X, Y, args)
 
-# TODO: Y=None by default. This is used to auto-detect symmetry
-# instead of passing explicit flags, which is prone to human error.
-# When only X is passed, we compute K from X and X. We do this
-# in every kernel.
-def _string_kernel(X, Y, kernel, kargs, sym=False):
+def _string_kernel(X, Y, kernel, kargs):
+    # Check if X=Y
+    sym = isinstance(Y, type(None))
+    if sym:
+        Y = X
     n, m = X.shape[0], Y.shape[0]
     K = np.empty(shape=(n, m), dtype=np.float)
     pool = Pool(os.cpu_count())
     for i in range(n):
-        if sym: # This is the case when X=Y
+        if sym:
             # Use the fact that K is symmetric
             done = [K[j, i] for j in range(i)] if i < m else []
             # Parallelize the inner loop
@@ -95,11 +96,8 @@ def _mismatch(args):
         #phi += phi_part
     return phi
 
-# TODO: sym can be detected automatically by checking if Y = None.
-# In case of training, we only pass X. In case of testing, we pass
-# X and Y. Change that for a cleaner code and better abstraction.
-def spectrum(X, Y, args, sym=False):
-    return _string_kernel(X, Y, _spectrum, args, sym)
+def spectrum(X, Y, args):
+    return _string_kernel(X, Y, _spectrum, args)
 
-def mismatch(X, Y, args, sym=False):
-    return _string_kernel(X, Y, _mismatch, args, sym)
+def mismatch(X, Y, args):
+    return _string_kernel(X, Y, _mismatch, args)
