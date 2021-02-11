@@ -96,8 +96,34 @@ def _mismatch(args):
         #phi += phi_part
     return phi
 
+def _gap_weighted(args):
+    x, y, p, lamK = args[0], args[1], args[2], args[3]
+    n = len(x)
+    m = len(y)
+    DPS = [[0.0]*(n+1)]*(m+1)
+    for i in range(0, n):
+        for j in range(0, m):
+            if x[i] == y[j]:
+                DPS[i+1][j+1] = lamK**2
+    DP = [[0.0]*(n+1)]*(m+1)
+    for l in range(2, p+1):
+        kern = 0
+        for i in range(1, n):
+            for j in range(1, m):
+                DP[i][j]    = DPS[i][j]
+                            + lamK * DP[i-1][j]
+                            + lamK * DP[i][j-1]
+                            - lamK**2 * DP[i-1][j-1]
+                if x[i-1] == y[j-1]:
+                    DPS[i][j] = lamK**2 * DP[i-1][j-1]
+                    kern = kern + DPS[i][j]
+    return kern
+
 def spectrum(X, Y, args):
     return _string_kernel(X, Y, _spectrum, args)
 
 def mismatch(X, Y, args):
     return _string_kernel(X, Y, _mismatch, args)
+
+def gap_weighted(X, Y, args):
+    return _string_kernel(X, Y, _gap_weighted, args)
