@@ -110,10 +110,7 @@ def _gap_weighted(args):
         kern = 0
         for i in range(1, n):
             for j in range(1, m):
-                DP[i][j]    = DPS[i][j]
-                            + lamK * DP[i-1][j]
-                            + lamK * DP[i][j-1]
-                            - lamK**2 * DP[i-1][j-1]
+                DP[i][j] = DPS[i][j] + lamK * DP[i-1][j] + lamK * DP[i][j-1] - lamK**2 * DP[i-1][j-1]
                 if x[i-1] == y[j-1]:
                     DPS[i][j] = lamK**2 * DP[i-1][j-1]
                     kern = kern + DPS[i][j]
