@@ -247,9 +247,9 @@ def krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, m, inde
     return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.mismatch, [k, m], index, save_model=save_model)
 
 
-def krr_gap_weighted(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, lamK, index, save_model=False):
+def krr_gap_weighted(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, p, lamK, index, save_model=False):
     print('Gap Weighted Subsequence Kernel Ridge Regression')
-    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.gap_weighted, [k, lamK], index, save_model=save_model)
+    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.gap_weighted, [p, lamK], index, save_model=save_model)
 
 # Using our older RBF simply isn't working
 #print('RBF Kernel SVM')
