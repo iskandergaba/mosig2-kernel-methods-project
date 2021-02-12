@@ -96,6 +96,8 @@ def _mismatch(args):
         #phi += phi_part
     return phi
 
+# Gap Weighted Subsequence Kernel from:
+# https://people.eecs.berkeley.edu/~jordan/kernels/0521813972c11_p344-396.pdf
 def _gap_weighted(args):
     x, y, p, lamK = args[0], args[1], args[2], args[3]
     n = len(x)
