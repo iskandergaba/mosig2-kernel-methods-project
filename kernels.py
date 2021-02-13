@@ -81,6 +81,12 @@ def _spectrum(args):
         phi += kmers[y[i:i + k]] if y[i:i + k] in kmers else 0
     return phi
 
+# Combination of two spectrum kernels with k1 and k2
+# w1 is the weight for the k1-spectrum
+def _spectrum_comb(args):
+    x, y, k1, k2, w1 = args[0], args[1], args[2], args[3], args[4]
+    return w1 * _spectrum([x, y, k1]) + (1 - w1) * _spectrum([x, y, k2])
+
 # Very inefficient mismatch kernel implementation
 def _mismatch(args):
     x, y, k, m = args[0], args[1], args[2], args[3]
@@ -118,6 +124,9 @@ def _gap_weighted(args):
 
 def spectrum(X, Y, args):
     return _string_kernel(X, Y, _spectrum, args)
+
+def spectrum_comb(X, Y, args):
+    return _string_kernel(X, Y, _spectrum_comb, args)
 
 def mismatch(X, Y, args):
     return _string_kernel(X, Y, _mismatch, args)
