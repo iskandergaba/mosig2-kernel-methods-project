@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import scipy.sparse as sp
 from multiprocessing import Pool
 
 
@@ -87,20 +88,49 @@ def _spectrum_comb(args):
     x, y, k1, k2, w1 = args[0], args[1], args[2], args[3], args[4]
     return w1 * _spectrum([x, y, k1]) + (1 - w1) * _spectrum([x, y, k2])
 
-# Very inefficient mismatch kernel implementation
-def _mismatch(args):
-    x, y, k, m = args[0], args[1], args[2], args[3]
-    phi, kmers = 0, {}
-    for i in range(len(x) - k + 1):
-        kmers[x[i:i + k]] = kmers[x[i:i + k]] + 1 if x[i:i + k] in kmers else 1
-    for i in range(len(y) - k + 1):
-        #phi_part = 0
-        for key in kmers:
-            diff = sum(c1 != c2 for c1, c2 in zip(key, y[i:i + k]))
-            #phi_part += kmers[key] if kmers[key] > phi_part and diff <= m else phi_part
-            phi += kmers[key] if diff <= m else 0
-        #phi += phi_part
-    return phi
+def _kmer_index(kmer, alpha):
+    idx, k = 0, len(kmer)
+    for i in range(k):
+        letter = kmer[i]
+        idx += alpha[letter] * len(alpha)**i
+    return idx
+
+def _kmer_variants(kmer, alpha, m):
+    k = len(kmer)
+    letters = alpha.keys()
+    variants = [kmer]
+    for i in range(m):
+        new_variants = []
+        for var in variants:
+            for j in range(k):
+                for l in letters:
+                    if l == var[j]:
+                        continue
+                    var_new = var[0:j] + l + var[j+1:]
+                    new_variants.append(var_new)
+        variants.extend(new_variants)
+    return variants
+
+def _pre_mismatch(X, alpha, k, m):
+    phis = sp.lil_matrix((X.shape[0], 4**k))
+    for i in range(X.shape[0]):
+        x = X[i][0]
+        for j in range(len(x) - k + 1):
+            kmer = x[j:j + k]
+            variants = _kmer_variants(kmer, alpha, m)
+            indices = [_kmer_index(var, alpha) for var in variants]
+            for idx in indices:
+                phis[i, idx] += 1
+    return phis
+
+def _mismatch(X, Y, args):
+    sym = isinstance(Y, type(None))
+    if sym:
+        Y = X
+    alpha, k, m = args[0], args[1], args[2]
+    phis_X = _pre_mismatch(X, alpha, k, m)
+    phis_Y = _pre_mismatch(Y, alpha, k, m)
+    return phis_X.dot(phis_Y.T).toarray()
 
 # Gap Weighted Subsequence Kernel from:
 # https://people.eecs.berkeley.edu/~jordan/kernels/0521813972c11_p344-396.pdf
@@ -131,7 +161,7 @@ def spectrum_comb(X, Y, args):
     return _string_kernel(X, Y, _spectrum_comb, args)
 
 def mismatch(X, Y, args):
-    return _string_kernel(X, Y, _mismatch, args)
+    return _mismatch(X, Y, args)
 
 def gap_weighted(X, Y, args):
     return _string_kernel(X, Y, _gap_weighted, args)

@@ -22,8 +22,7 @@ Xtes_processed = [
 Ytrs = ['data/Ytr0.csv', 'data/Ytr1.csv', 'data/Ytr2.csv']
 
 label_code = {'A': '0.25', 'C': '0.5', 'G': '0.75', 'T': '1'}
-alphabet = ['A', 'C', 'G', 'T']
-
+alphabet = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
 
 def preproess(index, numerical=True, read_mat=False):
 
@@ -245,9 +244,9 @@ def krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k1, k
     print('Spectrum Kernel Ridge Regression')
     return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.spectrum_comb, [k1, k2, w1], index, save_model=save_model)
 
-def krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, m, index, save_model=False):
+def krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alpha, lamb, k, m, index, save_model=False):
     print('Mismatch Kernel Ridge Regression')
-    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.mismatch, [k, m], index, save_model=save_model)
+    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.mismatch, [alpha, k, m], index, save_model=save_model)
 
 
 def krr_gap_weighted(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, p, lamK, index, save_model=False):
@@ -261,7 +260,8 @@ def krr_gap_weighted(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, p, lam
 # In case we want to conduct a grid search
 sigmas = [0.005, 0.05, 0.5, 1, 3, 5, 7, 10]
 lambdas = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.1, 0.5, 1]
-ks = [5, 6, 7, 8, 9]
+ks = [5, 6, 7, 8, 9, 10]
+ms = [1, 2, 3]
 
 trials, best_params = 1, [[],[],[]]
 
@@ -281,24 +281,29 @@ for index in range(0,3):
         #for sigma in sigmas:
         for k in ks:
             #print("Lambda = {0}, sigma = {1}".format(lamb, sigma))
-            print("Lambda = {0}, k = {1}".format(lamb, k))
-            sum = 0
-            for i in range(trials):
-                print('Trial', i + 1)
-                #sum += krr_rbf(lamb, sigma, save_model=False, read_mat=True)
-                sum += krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, index, save_model=False)
-            acc = sum / trials
-            print("Average testing accuracy: {0}\n".format(acc))
-            # Update the best accuracy and parameters
-            if best_acc < acc:
-                best_acc = acc
-                #best_params[index] = [lamb, sigma]
-                best_params[index] = [lamb, k]
+            #print("Lambda = {0}, k = {1}".format(lamb, k))
+            for m in ms:
+                print("Lambda = {0}, k = {1}, m = {2}".format(lamb, k, m))
+                sum = 0
+                for i in range(trials):
+                    print('Trial', i + 1)
+                    #sum += krr_rbf(lamb, sigma, save_model=False, read_mat=True)
+                    #sum += krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, index, save_model=False)
+                    sum += krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
+                acc = sum / trials
+                print("Average testing accuracy: {0}\n".format(acc))
+                # Update the best accuracy and parameters
+                if best_acc < acc:
+                    best_acc = acc
+                    #best_params[index] = [lamb, sigma]
+                    best_params[index] = [lamb, k, m]
 
-    print("Best parameters:\nLambda = {0}\nSigma = {1}".format(best_params[index][0], best_params[index][1]))
+    print("Best parameters:\nLambda = {0}, \nm = {1}".format(best_params[index][0], best_params[index][1], best_params[index][2]))
+    #print("Best parameters:\nLambda = {0}\nSigma = {1}".format(best_params[index][0], best_params[index][1]))
     #print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
     #krr_rbf(best_params[0], best_params[1], save_model=True, read_mat=True)
-    krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, best_params[index][0], best_params[index][1], index, save_model=True)
+    krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
+    #krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], best_params[index][2] index, save_model=True)
 
 Ytes = ['data_processed/Yte0.csv', 'data_processed/Yte1.csv', 'data_processed/Yte2.csv']
 pp.merge(Ytes, 'data_processed/Yte.csv', read_header=0, save_index=True)
