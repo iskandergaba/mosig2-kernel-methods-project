@@ -241,6 +241,9 @@ def krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, index, 
     print('Spectrum Kernel Ridge Regression')
     return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.spectrum, [k], index, save_model=save_model)
 
+def krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k1, k2, w1, index, save_model=False):
+    print('Spectrum Kernel Ridge Regression')
+    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.spectrum_comb, [k1, k2, w1], index, save_model=save_model)
 
 def krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, m, index, save_model=False):
     print('Mismatch Kernel Ridge Regression')
