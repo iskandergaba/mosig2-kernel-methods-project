@@ -260,8 +260,8 @@ def krr_gap_weighted(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, p, lam
 # In case we want to conduct a grid search
 sigmas = [0.005, 0.05, 0.5, 1, 3, 5, 7, 10]
 lambdas = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.1, 0.5, 1]
-ks = [5, 6, 7, 8, 9, 10]
-ms = [1, 2, 3]
+ks = [7, 8, 9, 10, 11, 12]
+ms = [2]
 
 trials, best_params = 1, [[],[],[]]
 

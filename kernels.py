@@ -123,14 +123,12 @@ def _pre_mismatch(X, alpha, k, m):
                 phis[i, idx] += 1
     return phis
 
-def _mismatch(X, Y, args):
-    sym = isinstance(Y, type(None))
-    if sym:
-        Y = X
+def _mismatch(X, Y, args, phis_X=None):
     alpha, k, m = args[0], args[1], args[2]
-    phis_X = _pre_mismatch(X, alpha, k, m)
-    phis_Y = _pre_mismatch(Y, alpha, k, m)
-    return phis_X.dot(phis_Y.T).toarray()
+    if phis_X is None:
+        phis_X = _pre_mismatch(X, alpha, k, m)
+    phis_Y = phis_X if isinstance(Y, type(None)) else _pre_mismatch(Y, alpha, k, m)
+    return phis_X, phis_X.dot(phis_Y.T).toarray()
 
 # Gap Weighted Subsequence Kernel from:
 # https://people.eecs.berkeley.edu/~jordan/kernels/0521813972c11_p344-396.pdf
@@ -160,8 +158,8 @@ def spectrum(X, Y, args):
 def spectrum_comb(X, Y, args):
     return _string_kernel(X, Y, _spectrum_comb, args)
 
-def mismatch(X, Y, args):
-    return _mismatch(X, Y, args)
+def mismatch(X, Y, args, phis=None):
+    return _mismatch(X, Y, args, phis)
 
 def gap_weighted(X, Y, args):
     return _string_kernel(X, Y, _gap_weighted, args)
