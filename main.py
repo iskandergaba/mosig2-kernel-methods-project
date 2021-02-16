@@ -267,7 +267,7 @@ def main():
     ks = [4, 5, 7, 8, 9, 10, 11, 12]
     ms = [0, 1, 2]
     
-    trials, best_params = 1, [[],[],[]]
+    best_params = [[],[],[]]
     
     
     for index in range(0,3):
