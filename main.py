@@ -261,9 +261,10 @@ def main():
 
     # In case we want to conduct a grid search
     sigmas = [0.005, 0.05, 0.5, 1, 3, 5, 7, 10]
-    lambdas = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.1, 0.5, 1]
-    ks = [7]
-    ms = [2]
+    #lambdas = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.1, 0.5, 1]
+    lambdas = np.linspace(0, 1, 100, endpoint=True)
+    ks = [4, 5, 7, 8, 9, 10, 11, 12]
+    ms = [0, 1, 2]
     
     trials, best_params = 1, [[],[],[]]
     
