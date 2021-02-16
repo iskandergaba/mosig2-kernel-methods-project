@@ -291,7 +291,7 @@ def main():
                 acc = krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, index, save_model=False)
                 #acc = krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, 5, 0.3, index)
                 #acc = krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
-                print("Average testing accuracy: {0}\n".format(acc))
+                print('\n')
                 # Update the best accuracy and parameters
                 if best_acc <= acc:
                     best_acc = acc
