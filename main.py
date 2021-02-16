@@ -257,61 +257,65 @@ def krr_gap_weighted(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, p, lam
 #print('RBF Kernel SVM')
 #ksvm(100, kernels.rbf_svm, [5], save_model=True, read_mat=False)
 
-# In case we want to conduct a grid search
-sigmas = [0.005, 0.05, 0.5, 1, 3, 5, 7, 10]
-#lambdas = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.1, 0.5, 1]
-lambdas = [0.05]
-ks = [7]
-ms = [2]
+def main():
 
-trials, best_params = 1, [[],[],[]]
-
-
-for index in range(0,3):
-    print("Dataset", index)
-    best_acc = 0
-    Xtr, Ytr, Xte = preproess(index, numerical=False)
-    # Split the data into training and validation sets
-    X_train, X_val, Y_train, Y_val = util.train_test_split(Xtr,
-                                                           Ytr,
-                                                           test_size=0.2,
-                                                           random=False)
-
+    # In case we want to conduct a grid search
+    sigmas = [0.005, 0.05, 0.5, 1, 3, 5, 7, 10]
+    #lambdas = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.1, 0.5, 1]
+    lambdas = [0.05]
+    ks = [7]
+    ms = [2]
     
-    for lamb in lambdas:
-        #for sigma in sigmas:
-        for k in ks:
-            #print("Lambda = {0}, sigma = {1}".format(lamb, sigma))
-            print("Lambda = {0}, k = {1}".format(lamb, k))
-            #for m in ms:
-                #print("Lambda = {0}, k = {1}, m = {2}".format(lamb, k, m))
-            #acc = krr_rbf(lamb, sigma, save_model=False, read_mat=True)
-            acc = krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, index, save_model=False)
-            #acc = krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, 5, 0.3, index)
-            #acc = krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
-            print("Average testing accuracy: {0}\n".format(acc))
-            # Update the best accuracy and parameters
-            if best_acc <= acc:
-                best_acc = acc
-                #best_params[index] = [lamb, sigma]
-                best_params[index] = [lamb, k]
-                #best_params[index] = [lamb, k, m]
-
-    #print("Best parameters:\nLambda = {0}\nSigma = {1}".format(best_params[index][0], best_params[index][1]))
-    #krr_rbf(best_params[0], best_params[1], save_model=True, read_mat=True)
-    #print("Best parameters:\nLambda = {0}, \nk = {1}, \nm = {2}".format(best_params[index][0], best_params[index][1], best_params[index][2]))
-    #krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], best_params[index][2], index, save_model=True)
-    print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
-    krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], index, save_model=True)
-
-Ytes = ['data_processed/Yte0.csv', 'data_processed/Yte1.csv', 'data_processed/Yte2.csv']
-pp.merge(Ytes, 'data_processed/Yte.csv', read_header=0, save_index=True)
-
-# Sample model calls
-#krr_rbf(1, 0.05, save_model=True, read_mat=True)
-#krr_linear(0.01, 0.5, save_model=True, read_mat=True)
-#krr_poly(100, degree=2, c=0.1, gamma=0.5, save_model=True, read_mat=False)
-#krr_spectrum(0.05, 8, save_model=False)
-#krr_spectrum(0.1, 7, save_model=False)
-#krr_spectrum(10000, 9, save_model=False)
-#krr_mismatch(0.1, 12, 3, save_model=False)
+    trials, best_params = 1, [[],[],[]]
+    
+    
+    for index in range(0,3):
+        print("Dataset", index)
+        best_acc = 0
+        Xtr, Ytr, Xte = preproess(index, numerical=False)
+        # Split the data into training and validation sets
+        X_train, X_val, Y_train, Y_val = util.train_test_split(Xtr,
+                                                               Ytr,
+                                                               test_size=0.2,
+                                                               random=False)
+    
+        
+        for lamb in lambdas:
+            #for sigma in sigmas:
+            for k in ks:
+                #print("Lambda = {0}, sigma = {1}".format(lamb, sigma))
+                print("Lambda = {0}, k = {1}".format(lamb, k))
+                #for m in ms:
+                    #print("Lambda = {0}, k = {1}, m = {2}".format(lamb, k, m))
+                #acc = krr_rbf(lamb, sigma, save_model=False, read_mat=True)
+                acc = krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, index, save_model=False)
+                #acc = krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, 5, 0.3, index)
+                #acc = krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
+                print("Average testing accuracy: {0}\n".format(acc))
+                # Update the best accuracy and parameters
+                if best_acc <= acc:
+                    best_acc = acc
+                    #best_params[index] = [lamb, sigma]
+                    best_params[index] = [lamb, k]
+                    #best_params[index] = [lamb, k, m]
+    
+        #print("Best parameters:\nLambda = {0}\nSigma = {1}".format(best_params[index][0], best_params[index][1]))
+        #krr_rbf(best_params[0], best_params[1], save_model=True, read_mat=True)
+        #print("Best parameters:\nLambda = {0}, \nk = {1}, \nm = {2}".format(best_params[index][0], best_params[index][1], best_params[index][2]))
+        #krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], best_params[index][2], index, save_model=True)
+        print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
+        krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], index, save_model=True)
+    
+    Ytes = ['data_processed/Yte0.csv', 'data_processed/Yte1.csv', 'data_processed/Yte2.csv']
+    pp.merge(Ytes, 'data_processed/Yte.csv', read_header=0, save_index=True)
+    
+    # Sample model calls
+    #krr_rbf(1, 0.05, save_model=True, read_mat=True)
+    #krr_linear(0.01, 0.5, save_model=True, read_mat=True)
+    #krr_poly(100, degree=2, c=0.1, gamma=0.5, save_model=True, read_mat=False)
+    #krr_spectrum(0.05, 8, save_model=False)
+    #krr_spectrum(0.1, 7, save_model=False)
+    #krr_spectrum(10000, 9, save_model=False)
+    #krr_mismatch(0.1, 12, 3, save_model=False)
+if __name__ == "__main__":
+    main()
