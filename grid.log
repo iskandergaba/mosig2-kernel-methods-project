@@ -1,11 +1,3 @@
-[0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1  0.11 0.12 0.13 0.14
- 0.15 0.16 0.17 0.18 0.19 0.2  0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28
- 0.29 0.3  0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4  0.41 0.42
- 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5  0.51 0.52 0.53 0.54 0.55 0.56
- 0.57 0.58 0.59 0.6  0.61 0.62 0.63 0.64 0.65 0.66 0.67 0.68 0.69 0.7
- 0.71 0.72 0.73 0.74 0.75 0.76 0.77 0.78 0.79 0.8  0.81 0.82 0.83 0.84
- 0.85 0.86 0.87 0.88 0.89 0.9  0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98
- 0.99 1.  ]
 Dataset 0
 Lambda = 0.01, k = 4
 Spectrum Kernel Ridge Regression
@@ -52,3 +44,1059 @@ Average testing accuracy: 0.635
 Lambda = 0.01, k = 12
 Spectrum Kernel Ridge Regression
 Accuracy over training data: 1.0
+Accuracy over testing data: 0.5275
+Average testing accuracy: 0.5275
+
+Lambda = 0.02, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.730625
+Accuracy over testing data: 0.6075
+Average testing accuracy: 0.6075
+
+Lambda = 0.02, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.87375
+Accuracy over testing data: 0.615
+Average testing accuracy: 0.615
+
+Lambda = 0.02, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.66
+Average testing accuracy: 0.66
+
+Lambda = 0.02, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.625
+Average testing accuracy: 0.625
+
+Lambda = 0.02, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.02, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.02, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.02, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.5275
+Average testing accuracy: 0.5275
+
+Lambda = 0.03, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.725
+Accuracy over testing data: 0.6075
+Average testing accuracy: 0.6075
+
+Lambda = 0.03, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.86625
+Accuracy over testing data: 0.615
+Average testing accuracy: 0.615
+
+Lambda = 0.03, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.66
+Average testing accuracy: 0.66
+
+Lambda = 0.03, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.625
+Average testing accuracy: 0.625
+
+Lambda = 0.03, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.635
+Average testing accuracy: 0.635
+
+Lambda = 0.03, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.03, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.635
+Average testing accuracy: 0.635
+
+Lambda = 0.03, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.5275
+Average testing accuracy: 0.5275
+
+Lambda = 0.04, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.725
+Accuracy over testing data: 0.6075
+Average testing accuracy: 0.6075
+
+Lambda = 0.04, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.85875
+Accuracy over testing data: 0.6125
+Average testing accuracy: 0.6125
+
+Lambda = 0.04, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.665
+Average testing accuracy: 0.665
+
+Lambda = 0.04, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.04, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.04, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.04, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.04, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.5275
+Average testing accuracy: 0.5275
+
+Lambda = 0.05, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.72375
+Accuracy over testing data: 0.6075
+Average testing accuracy: 0.6075
+
+Lambda = 0.05, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.8525
+Accuracy over testing data: 0.615
+Average testing accuracy: 0.615
+
+Lambda = 0.05, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6625
+Average testing accuracy: 0.6625
+
+Lambda = 0.05, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.05, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.05, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6425
+Average testing accuracy: 0.6425
+
+Lambda = 0.05, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.05, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.53
+Average testing accuracy: 0.53
+
+Lambda = 0.060000000000000005, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.723125
+Accuracy over testing data: 0.6075
+Average testing accuracy: 0.6075
+
+Lambda = 0.060000000000000005, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.849375
+Accuracy over testing data: 0.62
+Average testing accuracy: 0.62
+
+Lambda = 0.060000000000000005, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.66
+Average testing accuracy: 0.66
+
+Lambda = 0.060000000000000005, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.635
+Average testing accuracy: 0.635
+
+Lambda = 0.060000000000000005, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.6275
+Average testing accuracy: 0.6275
+
+Lambda = 0.060000000000000005, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.060000000000000005, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.060000000000000005, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.53
+Average testing accuracy: 0.53
+
+Lambda = 0.06999999999999999, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.72375
+Accuracy over testing data: 0.61
+Average testing accuracy: 0.61
+
+Lambda = 0.06999999999999999, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.84625
+Accuracy over testing data: 0.615
+Average testing accuracy: 0.615
+
+Lambda = 0.06999999999999999, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.655
+Average testing accuracy: 0.655
+
+Lambda = 0.06999999999999999, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.635
+Average testing accuracy: 0.635
+
+Lambda = 0.06999999999999999, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.625
+Average testing accuracy: 0.625
+
+Lambda = 0.06999999999999999, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.06999999999999999, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.06999999999999999, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 1.0
+Accuracy over testing data: 0.53
+Average testing accuracy: 0.53
+
+Lambda = 0.08, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.72375
+Accuracy over testing data: 0.6025
+Average testing accuracy: 0.6025
+
+Lambda = 0.08, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.845
+Accuracy over testing data: 0.625
+Average testing accuracy: 0.625
+
+Lambda = 0.08, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.655
+Average testing accuracy: 0.655
+
+Lambda = 0.08, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.08, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6275
+Average testing accuracy: 0.6275
+
+Lambda = 0.08, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.635
+Average testing accuracy: 0.635
+
+Lambda = 0.08, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6425
+Average testing accuracy: 0.6425
+
+Lambda = 0.08, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.53
+Average testing accuracy: 0.53
+
+Lambda = 0.09, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.7225
+Accuracy over testing data: 0.5975
+Average testing accuracy: 0.5975
+
+Lambda = 0.09, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.8425
+Accuracy over testing data: 0.6275
+Average testing accuracy: 0.6275
+
+Lambda = 0.09, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.9975
+Accuracy over testing data: 0.6525
+Average testing accuracy: 0.6525
+
+Lambda = 0.09, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.09, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.09, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.09, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6425
+Average testing accuracy: 0.6425
+
+Lambda = 0.09, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.53
+Average testing accuracy: 0.53
+
+Lambda = 0.09999999999999999, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.721875
+Accuracy over testing data: 0.5975
+Average testing accuracy: 0.5975
+
+Lambda = 0.09999999999999999, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.836875
+Accuracy over testing data: 0.6275
+Average testing accuracy: 0.6275
+
+Lambda = 0.09999999999999999, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99625
+Accuracy over testing data: 0.6525
+Average testing accuracy: 0.6525
+
+Lambda = 0.09999999999999999, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.09999999999999999, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.625
+Average testing accuracy: 0.625
+
+Lambda = 0.09999999999999999, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.09999999999999999, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6425
+Average testing accuracy: 0.6425
+
+Lambda = 0.09999999999999999, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.53
+Average testing accuracy: 0.53
+
+Lambda = 0.11, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.72
+Accuracy over testing data: 0.5975
+Average testing accuracy: 0.5975
+
+Lambda = 0.11, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.83375
+Accuracy over testing data: 0.6275
+Average testing accuracy: 0.6275
+
+Lambda = 0.11, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.994375
+Accuracy over testing data: 0.65
+Average testing accuracy: 0.65
+
+Lambda = 0.11, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.11, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6225
+Average testing accuracy: 0.6225
+
+Lambda = 0.11, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6425
+Average testing accuracy: 0.6425
+
+Lambda = 0.11, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.11, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.53
+Average testing accuracy: 0.53
+
+Lambda = 0.12, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.72
+Accuracy over testing data: 0.5975
+Average testing accuracy: 0.5975
+
+Lambda = 0.12, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.83125
+Accuracy over testing data: 0.6275
+Average testing accuracy: 0.6275
+
+Lambda = 0.12, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99375
+Accuracy over testing data: 0.6525
+Average testing accuracy: 0.6525
+
+Lambda = 0.12, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.12, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6175
+Average testing accuracy: 0.6175
+
+Lambda = 0.12, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6425
+Average testing accuracy: 0.6425
+
+Lambda = 0.12, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.12, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.53
+Average testing accuracy: 0.53
+
+Lambda = 0.13, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.7175
+Accuracy over testing data: 0.6
+Average testing accuracy: 0.6
+
+Lambda = 0.13, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.8275
+Accuracy over testing data: 0.6275
+Average testing accuracy: 0.6275
+
+Lambda = 0.13, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99375
+Accuracy over testing data: 0.6525
+Average testing accuracy: 0.6525
+
+Lambda = 0.13, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.13, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.62
+Average testing accuracy: 0.62
+
+Lambda = 0.13, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.645
+Average testing accuracy: 0.645
+
+Lambda = 0.13, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.13, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.53
+Average testing accuracy: 0.53
+
+Lambda = 0.14, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.7175
+Accuracy over testing data: 0.595
+Average testing accuracy: 0.595
+
+Lambda = 0.14, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.8275
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.14, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.991875
+Accuracy over testing data: 0.6525
+Average testing accuracy: 0.6525
+
+Lambda = 0.14, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.14, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.615
+Average testing accuracy: 0.615
+
+Lambda = 0.14, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.645
+Average testing accuracy: 0.645
+
+Lambda = 0.14, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.14, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.5325
+Average testing accuracy: 0.5325
+
+Lambda = 0.15000000000000002, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.7175
+Accuracy over testing data: 0.6025
+Average testing accuracy: 0.6025
+
+Lambda = 0.15000000000000002, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.825625
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.15000000000000002, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99125
+Accuracy over testing data: 0.6525
+Average testing accuracy: 0.6525
+
+Lambda = 0.15000000000000002, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.15000000000000002, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.62
+Average testing accuracy: 0.62
+
+Lambda = 0.15000000000000002, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.645
+Average testing accuracy: 0.645
+
+Lambda = 0.15000000000000002, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.15000000000000002, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.5325
+Average testing accuracy: 0.5325
+
+Lambda = 0.16, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.7175
+Accuracy over testing data: 0.605
+Average testing accuracy: 0.605
+
+Lambda = 0.16, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.824375
+Accuracy over testing data: 0.635
+Average testing accuracy: 0.635
+
+Lambda = 0.16, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.990625
+Accuracy over testing data: 0.65
+Average testing accuracy: 0.65
+
+Lambda = 0.16, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.16, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.6225
+Average testing accuracy: 0.6225
+
+Lambda = 0.16, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.645
+Average testing accuracy: 0.645
+
+Lambda = 0.16, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.16, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.5325
+Average testing accuracy: 0.5325
+
+Lambda = 0.17, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.71625
+Accuracy over testing data: 0.6025
+Average testing accuracy: 0.6025
+
+Lambda = 0.17, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.823125
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.17, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.988125
+Accuracy over testing data: 0.65
+Average testing accuracy: 0.65
+
+Lambda = 0.17, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.17, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.6225
+Average testing accuracy: 0.6225
+
+Lambda = 0.17, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.645
+Average testing accuracy: 0.645
+
+Lambda = 0.17, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.17, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.5325
+Average testing accuracy: 0.5325
+
+Lambda = 0.18000000000000002, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.715
+Accuracy over testing data: 0.6025
+Average testing accuracy: 0.6025
+
+Lambda = 0.18000000000000002, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.81875
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.18000000000000002, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.9875
+Accuracy over testing data: 0.65
+Average testing accuracy: 0.65
+
+Lambda = 0.18000000000000002, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.18000000000000002, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.62
+Average testing accuracy: 0.62
+
+Lambda = 0.18000000000000002, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.645
+Average testing accuracy: 0.645
+
+Lambda = 0.18000000000000002, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.18000000000000002, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.5325
+Average testing accuracy: 0.5325
+
+Lambda = 0.19, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.713125
+Accuracy over testing data: 0.6025
+Average testing accuracy: 0.6025
+
+Lambda = 0.19, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.818125
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.19, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.98625
+Accuracy over testing data: 0.65
+Average testing accuracy: 0.65
+
+Lambda = 0.19, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.19, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.62
+Average testing accuracy: 0.62
+
+Lambda = 0.19, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.645
+Average testing accuracy: 0.645
+
+Lambda = 0.19, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.19, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.5325
+Average testing accuracy: 0.5325
+
+Lambda = 0.2, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.710625
+Accuracy over testing data: 0.605
+Average testing accuracy: 0.605
+
+Lambda = 0.2, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.8175
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.2, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.985625
+Accuracy over testing data: 0.6525
+Average testing accuracy: 0.6525
+
+Lambda = 0.2, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.2, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.62
+Average testing accuracy: 0.62
+
+Lambda = 0.2, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.645
+Average testing accuracy: 0.645
+
+Lambda = 0.2, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.2, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.5325
+Average testing accuracy: 0.5325
+
+Lambda = 0.21000000000000002, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.71
+Accuracy over testing data: 0.61
+Average testing accuracy: 0.61
+
+Lambda = 0.21000000000000002, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.815
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.21000000000000002, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.985625
+Accuracy over testing data: 0.6525
+Average testing accuracy: 0.6525
+
+Lambda = 0.21000000000000002, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.21000000000000002, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.62
+Average testing accuracy: 0.62
+
+Lambda = 0.21000000000000002, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.6425
+Average testing accuracy: 0.6425
+
+Lambda = 0.21000000000000002, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.21000000000000002, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.5325
+Average testing accuracy: 0.5325
+
+Lambda = 0.22, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.713125
+Accuracy over testing data: 0.6075
+Average testing accuracy: 0.6075
+
+Lambda = 0.22, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.815625
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.22, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.985
+Accuracy over testing data: 0.655
+Average testing accuracy: 0.655
+
+Lambda = 0.22, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.22, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.62
+Average testing accuracy: 0.62
+
+Lambda = 0.22, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.6425
+Average testing accuracy: 0.6425
+
+Lambda = 0.22, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.22, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.5325
+Average testing accuracy: 0.5325
+
+Lambda = 0.23, k = 4
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.7125
+Accuracy over testing data: 0.61
+Average testing accuracy: 0.61
+
+Lambda = 0.23, k = 5
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.814375
+Accuracy over testing data: 0.63
+Average testing accuracy: 0.63
+
+Lambda = 0.23, k = 7
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.984375
+Accuracy over testing data: 0.655
+Average testing accuracy: 0.655
+
+Lambda = 0.23, k = 8
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.6325
+Average testing accuracy: 0.6325
+
+Lambda = 0.23, k = 9
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.62
+Average testing accuracy: 0.62
+
+Lambda = 0.23, k = 10
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.99875
+Accuracy over testing data: 0.64
+Average testing accuracy: 0.64
+
+Lambda = 0.23, k = 11
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
+Accuracy over testing data: 0.6375
+Average testing accuracy: 0.6375
+
+Lambda = 0.23, k = 12
+Spectrum Kernel Ridge Regression
+Accuracy over training data: 0.999375
