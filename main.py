@@ -289,20 +289,20 @@ for index in range(0,3):
                     print('Trial', i + 1)
                     #sum += krr_rbf(lamb, sigma, save_model=False, read_mat=True)
                     #sum += krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, k, index, save_model=False)
-                    sum += krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
+                    #sum += krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
                 acc = sum / trials
                 print("Average testing accuracy: {0}\n".format(acc))
                 # Update the best accuracy and parameters
-                if best_acc < acc:
+                if best_acc <= acc:
                     best_acc = acc
                     #best_params[index] = [lamb, sigma]
                     best_params[index] = [lamb, k, m]
 
-    print("Best parameters:\nLambda = {0}, \nm = {1}".format(best_params[index][0], best_params[index][1], best_params[index][2]))
     #print("Best parameters:\nLambda = {0}\nSigma = {1}".format(best_params[index][0], best_params[index][1]))
-    #print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
     #krr_rbf(best_params[0], best_params[1], save_model=True, read_mat=True)
-    krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
+    print("Best parameters:\nLambda = {0}, \nk = {1}, \nm = {2}".format(best_params[index][0], best_params[index][1], best_params[index][2]))
+    krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=True)
+    #print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
     #krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], best_params[index][2] index, save_model=True)
 
 Ytes = ['data_processed/Yte0.csv', 'data_processed/Yte1.csv', 'data_processed/Yte2.csv']

@@ -23,8 +23,8 @@ class KernelRidgeRegression():
         return self.predict_vals(X_train, K_train)
 
     # Label prediction function
-    def predict(self, X_test, K_test=None, phis=None):
-        Y_pred, _ = self.predict_vals(X_test, K_test, phis)
+    def predict(self, X_test, K_test=None):
+        Y_pred, _ = self.predict_vals(X_test, K_test)
         return Y_pred
 
     # Label and values prediction function
