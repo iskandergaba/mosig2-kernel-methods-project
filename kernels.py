@@ -60,14 +60,10 @@ def _string_kernel(X, Y, kernel, kargs):
                       for j in range(i, m)] if i < m else [[X[i, 0], Y[j, 0]] +
                                                            kargs for j in range(m)]
             K[i] = np.array(done + pool.map(kernel, inputs))
-            # Scale-down the entries to the range [0, 1]
-            #K[i] = K[i] / max(np.max(K[i]), 1)
         else:
             inputs = [[X[i, 0], Y[j, 0]] + kargs for j in range(m)]
             K[i] = np.array(pool.map(kernel, inputs))
 
-    # Or re-scale using the whole matrix
-    #K /= np.max(K)
     return K
 
 
@@ -82,11 +78,12 @@ def _spectrum(args):
         phi += kmers[y[i:i + k]] if y[i:i + k] in kmers else 0
     return phi
 
-# Combination of two spectrum kernels with k1 and k2
-# w1 is the weight for the k1-spectrum
-def _spectrum_comb(args):
-    x, y, k1, k2, w1 = args[0], args[1], args[2], args[3], args[4]
-    return w1 * _spectrum([x, y, k1]) + (1 - w1) * _spectrum([x, y, k2])
+
+def _spectrum_comb(args, phis):
+    X, Y, k1, k2, w1 = args[0], args[1], args[2], args[3], args[4]
+    args.append(0)
+    return _mismatch(X, Y, args, phis)
+    return w1 * _mismatch([X, Y, k1]) + (1 - w1) * _spectrum([x, y, k2])
 
 def _kmer_index(kmer, alpha):
     idx, k = 0, len(kmer)
@@ -152,14 +149,24 @@ def _gap_weighted(args):
                     kern = kern + DPS[i, j]
     return kern
 
-def spectrum(X, Y, args):
-    return _string_kernel(X, Y, _spectrum, args)
-
-def spectrum_comb(X, Y, args):
-    return _string_kernel(X, Y, _spectrum_comb, args)
-
 def mismatch(X, Y, args, phis=None):
     return _mismatch(X, Y, args, phis)
 
+# k-Spectrum kernel is mismatch kernel with m = 0
+def spectrum(X, Y, args, phis=None):
+    args.append(0)
+    return _mismatch(X, Y, args, phis)
+
+# Combination of two spectrum kernels with k1 and k2
+# w1 is the weight for the k1-spectrum
+def spectrum_comb(X, Y, args, phis=None):
+    alpha, k1, k2, w1 = args[0], args[1], args[2], args[3]
+    phi_X, K1 = _mismatch(X, Y, [alpha, k1, 0], phis)
+    _, K2 = _mismatch(X, Y, [alpha, k2, 0])
+    return phi_X, w1 * K1 + (1 - w1) * K2
+
 def gap_weighted(X, Y, args):
     return _string_kernel(X, Y, _gap_weighted, args)
+
+def spectrum_old(X, Y, args):
+    return _string_kernel(X, Y, _spectrum, args)
