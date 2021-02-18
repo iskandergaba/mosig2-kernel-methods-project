@@ -5,11 +5,21 @@ from multiprocessing import Pool
 
 
 def linear(X, Y, args):
+    # Check if X=Y
+    sym = isinstance(Y, type(None))
+    if sym:
+        Y = X
+
     c = args[0]
     return np.dot(X, Y.T) + c
 
 
 def polynomial(X, Y, args):
+    # Check if X=Y
+    sym = isinstance(Y, type(None))
+    if sym:
+        Y = X
+
     d = args[0]
     c = args[1]
     gamma = args[2]
@@ -46,6 +56,9 @@ def _kmer_index(kmer, alpha):
         idx += alpha[letter] * len(alpha)**i
     return idx
 
+###############################
+# START: MISMATCH KERNEL CODE #
+###############################
 
 # Find all possible variants of a k-mer with up to m mismatches
 def _kmer_variants(kmer, alpha, m):
@@ -90,6 +103,10 @@ def _mismatch(X, Y, args, phis_X=None):
 
 def mismatch(X, Y, args, phis=None):
     return _mismatch(X, Y, args, phis)
+
+#############################
+# END: MISMATCH KERNEL CODE #
+#############################
 
 
 # k-Spectrum kernel is mismatch kernel with m = 0
@@ -153,6 +170,6 @@ def spectrum_legacy(X, Y, args):
     return _string_kernel(X, Y, _spectrum, args)
 
 
-########################################
+######################################
 # END: LEGACY K-SPECTRUM KERNEL CODE #
-########################################
+######################################

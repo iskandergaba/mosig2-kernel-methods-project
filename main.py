@@ -1,3 +1,4 @@
+import os
 import util
 import kernels
 import regression
@@ -30,8 +31,10 @@ def preproess(index, numerical=True, read_mat=False):
     if numerical:
         if read_mat:
             # READ MAT100 FILE AT INDEX index ONLY
-            Xtr = pd.read_csv(Xtrs_mat100[index], delimiter=' ', header=None)
-            Xte = pd.read_csv(Xtes_mat100[index], delimiter=' ', header=None)
+            Xtr = pd.read_csv(Xtrs_mat100[index], delimiter=' ',
+                              header=None).to_numpy().astype(np.float)
+            Xte = pd.read_csv(Xtes_mat100[index], delimiter=' ',
+                              header=None).to_numpy().astype(np.float)
 
         else:
             # label-encode
@@ -60,24 +63,24 @@ def preproess(index, numerical=True, read_mat=False):
     return Xtr, Ytr, Xte,
 
 
-def _krr_alphabetic(X_train,
-                    X_val,
-                    Y_train,
-                    Y_val,
-                    Xtr,
-                    Ytr,
-                    Xte,
-                    lamb,
-                    kernel,
-                    args,
-                    index,
-                    save_model=False):
+def _krr(X_train,
+         X_val,
+         Y_train,
+         Y_val,
+         Xtr,
+         Ytr,
+         Xte,
+         lamb,
+         kernel,
+         args,
+         index,
+         save_model=False):
+
     # Initialize model
     model = regression.KernelRidgeRegression(kernel, args)
 
     if save_model:
         # Train new model on all the data
-        model = regression.KernelRidgeRegression(kernel, args)
         Y_pred, _ = model.fit(Xtr, Ytr, lamb)
         acc = np.sum(Ytr == Y_pred) / Y_pred.shape[0]
         print('Final model accuracy over training data:', acc, '\n')
@@ -86,6 +89,8 @@ def _krr_alphabetic(X_train,
         Y_pred = model.predict(Xte).ravel()
         Y_pred[Y_pred == -1] = 0
         df = pd.DataFrame(data={'Bound': Y_pred})
+        if not os.path.isdir('data_processed'):
+            os.mkdir('data_processed')
         df.to_csv('data_processed/Yte' + str(index) + '.csv',
                   index=True,
                   index_label='Id')
@@ -103,60 +108,81 @@ def _krr_alphabetic(X_train,
         return acc
 
 
-def _krr_numerical(lamb, kernel, args, save_model=False, read_mat=False):
-
-    Xtr, Ytr, Xte = preproess(numerical=True, read_mat=read_mat)
-
-    # Split the data into training and validation sets
-    X_train, X_val, Y_train, Y_val = util.train_test_split(Xtr,
-                                                           Ytr,
-                                                           test_size=0.2)
-    # Initialize the model
-    model = regression.KernelRidgeRegression(kernel, args)
-    # Fit training data
-    Y_pred, _ = model.fit(X_train, Y_train, lamb)
-    acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
-    print('Accuracy over training data:', acc)
-    # Test the model
-    Y_pred, _ = model.predict_vals(X_val)
-    test_acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
-    print('Accuracy over testing data:', test_acc)
-    if save_model:
-        # Train new model on all the data
-        model = regression.KernelRidgeRegression(kernel, args)
-        Y_pred, _ = model.fit(Xtr, Ytr, lamb)
-        acc = np.sum(Ytr == Y_pred) / Y_pred.shape[0]
-        print('Final model accuracy over training data:', acc)
-
-        Y_pred = model.predict(Xte).ravel()
-        #Y_pred[Y_pred == -1] = 0
-        df = pd.DataFrame(data={'Bound': Y_pred})
-        df.to_csv('data_processed/Yte.csv', index=True, index_label='Id')
-    return test_acc
-
-
-def krr_linear(lamb, c=1, save_model=False, read_mat=False):
+def krr_linear(X_train,
+               X_val,
+               Y_train,
+               Y_val,
+               Xtr,
+               Ytr,
+               Xte,
+               lamb,
+               c,
+               index,
+               save_model=False):
     print('Linear Kernel Ridge Regression')
-    _krr_numerical(lamb,
-                   kernels.linear, [c],
-                   save_model=save_model,
-                   read_mat=read_mat)
+    return _krr(X_train,
+                X_val,
+                Y_train,
+                Y_val,
+                Xtr,
+                Ytr,
+                Xte,
+                lamb,
+                kernels.linear, [c],
+                index,
+                save_model=save_model)
 
 
-def krr_poly(lamb, degree, c=1, gamma=1, save_model=False, read_mat=False):
+def krr_poly(X_train,
+             X_val,
+             Y_train,
+             Y_val,
+             Xtr,
+             Ytr,
+             Xte,
+             lamb,
+             degree,
+             c,
+             gamma,
+             index,
+             save_model=False):
     print('Polynomial Kernel Ridge Regression')
-    _krr_numerical(lamb,
-                   kernels.polynomial, [degree, c, gamma],
-                   save_model=save_model,
-                   read_mat=read_mat)
+    return _krr(X_train,
+                X_val,
+                Y_train,
+                Y_val,
+                Xtr,
+                Ytr,
+                Xte,
+                lamb,
+                kernels.polynomial, [degree, c, gamma],
+                index,
+                save_model=save_model)
 
 
-def krr_rbf(lamb, sigma, save_model=False, read_mat=False):
+def krr_rbf(X_train,
+            X_val,
+            Y_train,
+            Y_val,
+            Xtr,
+            Ytr,
+            Xte,
+            lamb,
+            sigma,
+            index,
+            save_model=False):
     print('RBF Kernel Ridge Regression')
-    return _krr_numerical(lamb,
-                          kernels.rbf, [sigma],
-                          save_model=save_model,
-                          read_mat=read_mat)
+    return _krr(X_train,
+                X_val,
+                Y_train,
+                Y_val,
+                Xtr,
+                Ytr,
+                Xte,
+                lamb,
+                kernels.rbf, [sigma],
+                index,
+                save_model=save_model)
 
 
 def krr_spectrum(X_train,
@@ -172,17 +198,17 @@ def krr_spectrum(X_train,
                  index,
                  save_model=False):
     print('Spectrum Kernel Ridge Regression')
-    return _krr_alphabetic(X_train,
-                           X_val,
-                           Y_train,
-                           Y_val,
-                           Xtr,
-                           Ytr,
-                           Xte,
-                           lamb,
-                           kernels.spectrum, [alpha, k],
-                           index,
-                           save_model=save_model)
+    return _krr(X_train,
+                X_val,
+                Y_train,
+                Y_val,
+                Xtr,
+                Ytr,
+                Xte,
+                lamb,
+                kernels.spectrum, [alpha, k],
+                index,
+                save_model=save_model)
 
 
 def krr_spectrum_comb(X_train,
@@ -200,17 +226,17 @@ def krr_spectrum_comb(X_train,
                       index,
                       save_model=False):
     print('Spectrum Combination Kernel Ridge Regression')
-    return _krr_alphabetic(X_train,
-                           X_val,
-                           Y_train,
-                           Y_val,
-                           Xtr,
-                           Ytr,
-                           Xte,
-                           lamb,
-                           kernels.spectrum_comb, [alpha, k1, k2, w1],
-                           index,
-                           save_model=save_model)
+    return _krr(X_train,
+                X_val,
+                Y_train,
+                Y_val,
+                Xtr,
+                Ytr,
+                Xte,
+                lamb,
+                kernels.spectrum_comb, [alpha, k1, k2, w1],
+                index,
+                save_model=save_model)
 
 
 def krr_mismatch(X_train,
@@ -227,17 +253,18 @@ def krr_mismatch(X_train,
                  index,
                  save_model=False):
     print('Mismatch Kernel Ridge Regression')
-    return _krr_alphabetic(X_train,
-                           X_val,
-                           Y_train,
-                           Y_val,
-                           Xtr,
-                           Ytr,
-                           Xte,
-                           lamb,
-                           kernels.mismatch, [alpha, k, m],
-                           index,
-                           save_model=save_model)
+    return _krr(X_train,
+                X_val,
+                Y_train,
+                Y_val,
+                Xtr,
+                Ytr,
+                Xte,
+                lamb,
+                kernels.mismatch, [alpha, k, m],
+                index,
+                save_model=save_model)
+
 
 def main():
 
@@ -253,6 +280,7 @@ def main():
     for index in range(0, 3):
         print("Dataset", index)
         best_acc = 0
+        #Xtr, Ytr, Xte = preproess(index, numerical=True, read_mat=True)
         Xtr, Ytr, Xte = preproess(index, numerical=False)
         # Split the data into training and validation sets
         X_train, X_val, Y_train, Y_val = util.train_test_split(Xtr,
@@ -268,7 +296,7 @@ def main():
                 print("Lambda = {0}, w = {1}".format(lamb, w))
                 #for m in ms:
                 #print("Lambda = {0}, k = {1}, m = {2}".format(lamb, k, m))
-                #acc = krr_rbf(lamb, sigma, save_model=False, read_mat=True)
+                #acc = krr_rbf(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, 0.3, 0.5, index, save_model=True)
                 #acc = krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, index, save_model=False)
                 acc = krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr,
                                         Ytr, Xte, alphabet, lamb, 5, 7, w,
