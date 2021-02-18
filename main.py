@@ -1,4 +1,3 @@
-import svm
 import util
 import kernels
 import regression
@@ -24,6 +23,7 @@ Ytrs = ['data/Ytr0.csv', 'data/Ytr1.csv', 'data/Ytr2.csv']
 label_code = {'A': '0.25', 'C': '0.5', 'G': '0.75', 'T': '1'}
 alphabet = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
 
+
 def preproess(index, numerical=True, read_mat=False):
 
     Xtr, Xte = pd.DataFrame(), pd.DataFrame()
@@ -34,11 +34,8 @@ def preproess(index, numerical=True, read_mat=False):
             Xte = pd.read_csv(Xtes_mat100[index], delimiter=' ', header=None)
 
         else:
-            # Either label encode or one-hot encode
-            #pp.preprocess(Xtrs, Ytrs, Xtes, enc.one_hot_encode, enc_args=[alphabet])
-            pp.preprocess([Xtrs[index]],
-                          [Ytrs[index]],
-                          [Xtes[index]],
+            # label-encode
+            pp.preprocess([Xtrs[index]], [Ytrs[index]], [Xtes[index]],
                           enc.label_encode,
                           enc_args=[label_code])
             # Load processed data
@@ -63,61 +60,18 @@ def preproess(index, numerical=True, read_mat=False):
     return Xtr, Ytr, Xte,
 
 
-def ksvm(lamb, kernel, args, save_model=False, read_mat=False):
-    '''
-    #pp.preprocess(Xtrs, Ytrs, Xtes, enc.one_hot_encode, enc_args=[alphabet])
-    pp.preprocess(Xtrs, Ytrs, Xtes, enc.label_encode, enc_args=[label_code])
-    # Load processed data
-    X = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
-    Y = pd.read_csv('data_processed/Ytr.csv', delimiter=',')
-    X, Y = X.drop('Id', axis=1).to_numpy().astype(np.float), Y.drop(
-        'Id', axis=1).to_numpy().reshape(-1)
-    Y[Y == 0] = -1
-    '''
-    X, Y, Xte = preproess(numerical=True, read_mat=read_mat)
-    #X, Y = X[:2000], Y[:2000]
-    # Split the data into training and validation sets
-    X_train, X_val, Y_train, Y_val = util.train_test_split(X, Y, test_size=0.2)
-    model = svm.KSVM(kernel, args)
-    # Fit training data
-    Y_pred = model.fit(X_train, Y_train, lamb, verbose=True)
-    acc = np.sum(Y_train == Y_pred) / Y_pred.shape[0]
-    print('Accuracy over training data:', acc)
-    # Test the model
-    Y_pred = model.predict(X_val)
-    acc = np.sum(Y_val == Y_pred) / Y_pred.shape[0]
-    print('Accuracy over testing data:', acc)
-    if save_model:
-        if Xte is None:
-            print("Please provide testing data set.")
-
-        # Train new model on all the data
-        model = svm.KSVM(kernel, args)
-        Y_pred = model.fit(X, Y, lamb)
-        acc = np.sum(Y == Y_pred) / Y_pred.shape[0]
-        print('Final model accuracy over training data:', acc)
-
-        # Save test results
-        Y_pred = model.predict(Xte).ravel()
-        Y_pred[Y_pred == -1] = 0
-        df = pd.DataFrame(data={'Bound': Y_pred})
-        '''
-        df = pd.DataFrame()
-        for Xte in Xtes_processed:
-            data = pd.read_csv(Xte, delimiter=',')
-            ids, seq = data['Id'], data.drop('Id', axis=1).to_numpy()
-            Y_pred = model.predict(seq).ravel()
-            Y_pred[Y_pred == -1] = 0
-            temp = pd.DataFrame(data={'Id': ids, 'Bound': Y_pred})
-            if df.empty:
-                df = temp
-            else:
-                df = pd.concat([df, temp], axis=0)
-        '''
-        df.to_csv('data_processed/Yte.csv', index=True, index_label='Id')
-
-
-def _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernel, args, index, save_model=False):
+def _krr_alphabetic(X_train,
+                    X_val,
+                    Y_train,
+                    Y_val,
+                    Xtr,
+                    Ytr,
+                    Xte,
+                    lamb,
+                    kernel,
+                    args,
+                    index,
+                    save_model=False):
     # Initialize model
     model = regression.KernelRidgeRegression(kernel, args)
 
@@ -132,7 +86,9 @@ def _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernel,
         Y_pred = model.predict(Xte).ravel()
         Y_pred[Y_pred == -1] = 0
         df = pd.DataFrame(data={'Bound': Y_pred})
-        df.to_csv('data_processed/Yte'+str(index)+'.csv', index=True, index_label='Id')
+        df.to_csv('data_processed/Yte' + str(index) + '.csv',
+                  index=True,
+                  index_label='Id')
 
     else:
         # Fit training data
@@ -203,22 +159,85 @@ def krr_rbf(lamb, sigma, save_model=False, read_mat=False):
                           read_mat=read_mat)
 
 
-def krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alpha, lamb, k, index, save_model=False):
+def krr_spectrum(X_train,
+                 X_val,
+                 Y_train,
+                 Y_val,
+                 Xtr,
+                 Ytr,
+                 Xte,
+                 alpha,
+                 lamb,
+                 k,
+                 index,
+                 save_model=False):
     print('Spectrum Kernel Ridge Regression')
-    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.spectrum, [alpha, k], index, save_model=save_model)
+    return _krr_alphabetic(X_train,
+                           X_val,
+                           Y_train,
+                           Y_val,
+                           Xtr,
+                           Ytr,
+                           Xte,
+                           lamb,
+                           kernels.spectrum, [alpha, k],
+                           index,
+                           save_model=save_model)
 
-def krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alpha, lamb, k1, k2, w1, index, save_model=False):
+
+def krr_spectrum_comb(X_train,
+                      X_val,
+                      Y_train,
+                      Y_val,
+                      Xtr,
+                      Ytr,
+                      Xte,
+                      alpha,
+                      lamb,
+                      k1,
+                      k2,
+                      w1,
+                      index,
+                      save_model=False):
     print('Spectrum Combination Kernel Ridge Regression')
-    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.spectrum_comb, [alpha, k1, k2, w1], index, save_model=save_model)
+    return _krr_alphabetic(X_train,
+                           X_val,
+                           Y_train,
+                           Y_val,
+                           Xtr,
+                           Ytr,
+                           Xte,
+                           lamb,
+                           kernels.spectrum_comb, [alpha, k1, k2, w1],
+                           index,
+                           save_model=save_model)
 
-def krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alpha, lamb, k, m, index, save_model=False):
+
+def krr_mismatch(X_train,
+                 X_val,
+                 Y_train,
+                 Y_val,
+                 Xtr,
+                 Ytr,
+                 Xte,
+                 alpha,
+                 lamb,
+                 k,
+                 m,
+                 index,
+                 save_model=False):
     print('Mismatch Kernel Ridge Regression')
-    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.mismatch, [alpha, k, m], index, save_model=save_model)
-
-
-def krr_gap_weighted(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, p, lamK, index, save_model=False):
-    print('Gap Weighted Subsequence Kernel Ridge Regression')
-    return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.gap_weighted, [p, lamK], index, save_model=save_model)
+    return _krr_alphabetic(X_train,
+                           X_val,
+                           Y_train,
+                           Y_val,
+                           Xtr,
+                           Ytr,
+                           Xte,
+                           lamb,
+                           kernels.mismatch, [alpha, k, m],
+                           index,
+                           save_model=save_model)
 
 def main():
 
@@ -228,10 +247,10 @@ def main():
     ws = np.linspace(0.01, 0.99, 10, endpoint=True)
     ks = [4, 5, 7, 8, 9, 10, 11, 12]
     ms = [0, 1, 2]
-    
-    best_params = [[],[],[]]
-    
-    for index in range(0,3):
+
+    best_params = [[], [], []]
+
+    for index in range(0, 3):
         print("Dataset", index)
         best_acc = 0
         Xtr, Ytr, Xte = preproess(index, numerical=False)
@@ -240,8 +259,7 @@ def main():
                                                                Ytr,
                                                                test_size=0.2,
                                                                random=False)
-    
-        
+
         for lamb in lambdas:
             #for sigma in sigmas:
             for w in ws:
@@ -249,29 +267,50 @@ def main():
                 #print("Lambda = {0}, k = {1}".format(lamb, k))
                 print("Lambda = {0}, w = {1}".format(lamb, w))
                 #for m in ms:
-                    #print("Lambda = {0}, k = {1}, m = {2}".format(lamb, k, m))
+                #print("Lambda = {0}, k = {1}, m = {2}".format(lamb, k, m))
                 #acc = krr_rbf(lamb, sigma, save_model=False, read_mat=True)
                 #acc = krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, index, save_model=False)
-                acc = krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, 5, 7, w, index)
+                acc = krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr,
+                                        Ytr, Xte, alphabet, lamb, 5, 7, w,
+                                        index)
                 #acc = krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
                 print('\n')
                 # Update the best accuracy and parameters
-                if best_acc <= acc:
+                if best_acc < acc:
                     best_acc = acc
                     #best_params[index] = [lamb, sigma]
                     best_params[index] = [lamb, w]
                     #best_params[index] = [lamb, k, m]
-    
+
         #print("Best parameters:\nLambda = {0}\nSigma = {1}".format(best_params[index][0], best_params[index][1]))
         #krr_rbf(best_params[0], best_params[1], save_model=True, read_mat=True)
         #print("Best parameters:\nLambda = {0}, \nk = {1}, \nm = {2}".format(best_params[index][0], best_params[index][1], best_params[index][2]))
         #krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], best_params[index][2], index, save_model=True)
         #print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
         #krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], index, save_model=True)
-        print("Best parameters:\nLambda = {0}\nK1 = {1}\nK2 = {2}\nw = {3}".format(best_params[index][0], 5, 7, best_params[index][1]))
-        krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], 5, 7, best_params[index][1], index, save_model=True)
-    
-    Ytes = ['data_processed/Yte0.csv', 'data_processed/Yte1.csv', 'data_processed/Yte2.csv']
+        print("Best parameters:\nLambda = {0}\nK1 = {1}\nK2 = {2}\nw = {3}".
+              format(best_params[index][0], 5, 7, best_params[index][1]))
+        krr_spectrum_comb(X_train,
+                          X_val,
+                          Y_train,
+                          Y_val,
+                          Xtr,
+                          Ytr,
+                          Xte,
+                          alphabet,
+                          best_params[index][0],
+                          5,
+                          7,
+                          best_params[index][1],
+                          index,
+                          save_model=True)
+
+    Ytes = [
+        'data_processed/Yte0.csv', 'data_processed/Yte1.csv',
+        'data_processed/Yte2.csv'
+    ]
     pp.merge(Ytes, 'data_processed/Yte.csv', read_header=0, save_index=True)
+
+
 if __name__ == "__main__":
     main()
