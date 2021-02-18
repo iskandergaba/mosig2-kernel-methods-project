@@ -29,30 +29,11 @@ def preproess(index, numerical=True, read_mat=False):
     Xtr, Xte = pd.DataFrame(), pd.DataFrame()
     if numerical:
         if read_mat:
-            # OLD CODE FOR MERGING
-            '''
-            # merge mat files in Xtr.csv, Xte.csv and Ytr.csv
-            # add Id column (save_index) where necessary (the mat100 files don't have
-            # it by default
-            pp.merge(Xtrs_mat100,
-                     'data_processed/Xtr.csv',
-                     delimiter=' ',
-                     save_index=True)
-            pp.merge(Xtes_mat100,
-                     'data_processed/Xte.csv',
-                     delimiter=' ',
-                     save_index=True)
-            pp.merge(Ytrs, 'data_processed/Ytr.csv', read_header=0)
-            '''
-
             # READ MAT100 FILE AT INDEX index ONLY
             Xtr = pd.read_csv(Xtrs_mat100[index], delimiter=' ', header=None)
             Xte = pd.read_csv(Xtes_mat100[index], delimiter=' ', header=None)
 
         else:
-            # THIS IS NOT IDEAL
-            # Use the same pp.preprocess calls but pass one file only
-
             # Either label encode or one-hot encode
             #pp.preprocess(Xtrs, Ytrs, Xtes, enc.one_hot_encode, enc_args=[alphabet])
             pp.preprocess([Xtrs[index]],
@@ -67,20 +48,6 @@ def preproess(index, numerical=True, read_mat=False):
             Xte = pd.read_csv('data_processed/Xte.csv', delimiter=',')
             Xte = Xte.drop('Id', axis=1).to_numpy().astype(np.float)
     else:
-        # OLD CODE FOR MERGING
-        '''
-        pp.merge(Xtrs, 'data_processed/Xtr.csv', read_header=0)
-        pp.merge(Xtes, 'data_processed/Xte.csv', read_header=0)
-        pp.merge(Ytrs, 'data_processed/Ytr.csv', read_header=0)
-
-        # Load processed data
-        Xtr = pd.read_csv('data_processed/Xtr.csv', delimiter=',')
-        Xtr = Xtr.drop('Id', axis=1).to_numpy()
-
-        Xte = pd.read_csv('data_processed/Xte.csv', delimiter=',')
-        Xte = Xte.drop('Id', axis=1).to_numpy()
-        '''
-
         # READ FILE AT INDEX index ONLY
         Xtr = pd.read_csv(Xtrs[index], delimiter=',', header=0)
         Xtr = Xtr.drop('Id', axis=1).to_numpy()
@@ -241,7 +208,7 @@ def krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alpha, lamb, k, 
     return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.spectrum, [alpha, k], index, save_model=save_model)
 
 def krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alpha, lamb, k1, k2, w1, index, save_model=False):
-    print('Spectrum Kernel Ridge Regression')
+    print('Spectrum Combination Kernel Ridge Regression')
     return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.spectrum_comb, [alpha, k1, k2, w1], index, save_model=save_model)
 
 def krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alpha, lamb, k, m, index, save_model=False):
@@ -253,21 +220,16 @@ def krr_gap_weighted(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, p, lam
     print('Gap Weighted Subsequence Kernel Ridge Regression')
     return _krr_alphabetic(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, lamb, kernels.gap_weighted, [p, lamK], index, save_model=save_model)
 
-# Using our older RBF simply isn't working
-#print('RBF Kernel SVM')
-#ksvm(100, kernels.rbf_svm, [5], save_model=True, read_mat=False)
-
 def main():
 
-    # In case we want to conduct a grid search
+    # Grid search, to be changed as needed
     sigmas = [0.005, 0.05, 0.5, 1, 3, 5, 7, 10]
-    #lambdas = [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.1, 0.5, 1]
     lambdas = np.linspace(0.01, 1, 100, endpoint=True)
+    ws = np.linspace(0.01, 0.99, 10, endpoint=True)
     ks = [4, 5, 7, 8, 9, 10, 11, 12]
     ms = [0, 1, 2]
     
     best_params = [[],[],[]]
-    
     
     for index in range(0,3):
         print("Dataset", index)
@@ -282,40 +244,34 @@ def main():
         
         for lamb in lambdas:
             #for sigma in sigmas:
-            for k in ks:
+            for w in ws:
                 #print("Lambda = {0}, sigma = {1}".format(lamb, sigma))
-                print("Lambda = {0}, k = {1}".format(lamb, k))
+                #print("Lambda = {0}, k = {1}".format(lamb, k))
+                print("Lambda = {0}, w = {1}".format(lamb, w))
                 #for m in ms:
                     #print("Lambda = {0}, k = {1}, m = {2}".format(lamb, k, m))
                 #acc = krr_rbf(lamb, sigma, save_model=False, read_mat=True)
-                acc = krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, index, save_model=False)
-                #acc = krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, 5, 0.3, index)
+                #acc = krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, index, save_model=False)
+                acc = krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, 5, 7, w, index)
                 #acc = krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, lamb, k, m, index, save_model=False)
                 print('\n')
                 # Update the best accuracy and parameters
                 if best_acc <= acc:
                     best_acc = acc
                     #best_params[index] = [lamb, sigma]
-                    best_params[index] = [lamb, k]
+                    best_params[index] = [lamb, w]
                     #best_params[index] = [lamb, k, m]
     
         #print("Best parameters:\nLambda = {0}\nSigma = {1}".format(best_params[index][0], best_params[index][1]))
         #krr_rbf(best_params[0], best_params[1], save_model=True, read_mat=True)
         #print("Best parameters:\nLambda = {0}, \nk = {1}, \nm = {2}".format(best_params[index][0], best_params[index][1], best_params[index][2]))
         #krr_mismatch(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], best_params[index][2], index, save_model=True)
-        print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
-        krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], index, save_model=True)
+        #print("Best parameters:\nLambda = {0}\nK = {1}".format(best_params[index][0], best_params[index][1]))
+        #krr_spectrum(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], best_params[index][1], index, save_model=True)
+        print("Best parameters:\nLambda = {0}\nK1 = {1}\nK2 = {2}\nw = {3}".format(best_params[index][0], 5, 7, best_params[index][1]))
+        krr_spectrum_comb(X_train, X_val, Y_train, Y_val, Xtr, Ytr, Xte, alphabet, best_params[index][0], 5, 7, best_params[index][1], index, save_model=True)
     
     Ytes = ['data_processed/Yte0.csv', 'data_processed/Yte1.csv', 'data_processed/Yte2.csv']
     pp.merge(Ytes, 'data_processed/Yte.csv', read_header=0, save_index=True)
-    
-    # Sample model calls
-    #krr_rbf(1, 0.05, save_model=True, read_mat=True)
-    #krr_linear(0.01, 0.5, save_model=True, read_mat=True)
-    #krr_poly(100, degree=2, c=0.1, gamma=0.5, save_model=True, read_mat=False)
-    #krr_spectrum(0.05, 8, save_model=False)
-    #krr_spectrum(0.1, 7, save_model=False)
-    #krr_spectrum(10000, 9, save_model=False)
-    #krr_mismatch(0.1, 12, 3, save_model=False)
 if __name__ == "__main__":
     main()

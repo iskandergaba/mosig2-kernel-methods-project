@@ -78,13 +78,7 @@ def _spectrum(args):
         phi += kmers[y[i:i + k]] if y[i:i + k] in kmers else 0
     return phi
 
-
-def _spectrum_comb(args, phis):
-    X, Y, k1, k2, w1 = args[0], args[1], args[2], args[3], args[4]
-    args.append(0)
-    return _mismatch(X, Y, args, phis)
-    return w1 * _mismatch([X, Y, k1]) + (1 - w1) * _spectrum([x, y, k2])
-
+# Compute the index of a k-mer in a sparse vector using an ordering
 def _kmer_index(kmer, alpha):
     idx, k = 0, len(kmer)
     for i in range(k):
@@ -92,6 +86,7 @@ def _kmer_index(kmer, alpha):
         idx += alpha[letter] * len(alpha)**i
     return idx
 
+# Find all possible variants of a k-mer with up to m mismatches
 def _kmer_variants(kmer, alpha, m):
     k = len(kmer)
     letters = alpha.keys()
@@ -108,6 +103,7 @@ def _kmer_variants(kmer, alpha, m):
         variants.extend(new_variants)
     return variants
 
+# Pre-indexation step for mismatch kernel
 def _pre_mismatch(X, alpha, k, m):
     phis = sp.lil_matrix((X.shape[0], 4**k))
     for i in range(X.shape[0]):
